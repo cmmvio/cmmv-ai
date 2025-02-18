@@ -400,3 +400,5 @@ dist
 .serverless/**/*.zip
 .generated
 models
+samples/*.bin
+samples/*.json

@@ -14,6 +14,18 @@ tsconfig.json
 yarn.lock
 pnpm-lock.yaml
 
+# cmmv
 *.tsbuildinfo
 .env
 .generated
+.cmmv.config.cjs
+samples
+.husky
+.editorconfig
+.commitlintrc.json
+.prettierignore
+.prettierrc
+.swcrc
+eslint.config.cjs
+tsconfig.cjs.json
+tsconfig.esm.json

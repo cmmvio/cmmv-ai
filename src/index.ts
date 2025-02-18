@@ -5,10 +5,16 @@ export * from './dataset.provider';
 export * from './tokenizer.interface';
 export * from './tokenizer.provider';
 
+//Adapter
+export * from "./vector-database.abstract";
+export * from "./qdrant.adapter";
+
+//Module
+import { AIConfig } from "./ai.config";
 import { Tokenizer } from './tokenizer.provider';
 import { Dataset } from './dataset.provider';
 
 export const AIModule = new Module('ai', {
-  configs: [],
-  providers: [Tokenizer, Dataset],
+    configs: [AIConfig],
+    providers: [Tokenizer, Dataset]
 });

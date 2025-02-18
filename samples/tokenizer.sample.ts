@@ -1,16 +1,16 @@
+//@ts-nocheck
 import { Application, Hook, HooksType } from '@cmmv/core';
 
-import { AIModule, Tokenizer } from '../src/index';
+import { Tokenizer } from '../src/index';
 
 class TokenizerSample {
-  @Hook(HooksType.onInitialize)
-  async start() {
-    const tokenizer = new Tokenizer();
-    tokenizer.start();
-  }
+    @Hook(HooksType.onInitialize)
+    async start() {
+        const tokenizer = new Tokenizer();
+        tokenizer.start();
+    }
 }
 
 Application.exec({
-  modules: [AIModule],
-  services: [TokenizerSample],
+    services: [TokenizerSample],
 });

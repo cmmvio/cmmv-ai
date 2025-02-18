@@ -23,6 +23,7 @@ export class Dataset {
     this.logger.verbose(
       `Index ${entry.type}:${entry.value} (${entry.filename})`,
     );
+
     this.data.push(entry);
   }
 
@@ -69,13 +70,11 @@ export class Dataset {
         ),
       }));
 
-      console.log(
-        `📥 Dataset carregado (${this.data.length} entradas) do binário.`,
-      );
+      this.logger.verbose(`Loaded dataset: ${filePath} (${this.data.length} inputs)`);
     }
   }
 
-  /*search(queryVector: Float32Array, topK = 5): DatasetEntry[] {
+    /*search(queryVector: Float32Array, topK = 5): DatasetEntry[] {
         const D = new Float32Array(topK);
         const I = new Int32Array(topK);
         this.index.search(queryVector, topK, D, I);

@@ -16,7 +16,7 @@ module.exports = {
                 '../cmmv-*/packages/**/*.ts'
             ],
             embeddingModel: process.env.EMBEDDING_MODEL || "WhereIsAI/UAE-Large-V1",
-            output: "./data.bin",
+            output: "./samples/data.bin",
             ignore: [
                 "node_modules", "*.d.ts", "*.cjs",
                 "*.spec.ts", "*.test.ts"
@@ -26,6 +26,13 @@ module.exports = {
                 "cmmv-language-tools", "cmmv-vue",
                 "cmmv-reactivity"
             ]
+        },
+        vector: {
+            provider: "qdrant",
+            qdrant: {
+                url: 'http://localhost:6333',
+                collection: 'embeddings'
+            }
         }
     }
 };
