@@ -12,8 +12,6 @@
   <a href="https://github.com/cmmvio/cmmv/issues">Report Issue</a>
 </p>
 
-### 🔹 **CMMV AI Module - Tokenization, RAG Dataset & FAISS Search**  
-
 `@cmmv/ai` is a module for integrating **LLMs (Large Language Models)** with **tokenization, dataset creation for RAG (Retrieval-Augmented Generation)**, and **FAISS-based vector search**. It allows efficient **code indexing and semantic search** for models like **CodeLlama** and **DeepSeek Code**.  
 
 ## 🚀 **Features**  
@@ -24,7 +22,6 @@
 ✅ **Custom Embedding Models** – Supports `Xenova/all-MiniLM-L6-v2`, `CodeLlama`, `DeepSeek`, and others.  
 ✅ **Future Database Integration** – Plans for **Neo4j, Elasticsearch, Pinecone, etc.**  
 
----
 
 ## ⚙ **Configuration (`.cmmv.config.js`)**  
 
@@ -72,7 +69,6 @@ module.exports = {
 | `tokenizer.ignore`      | List of ignored files/extensions. |
 | `tokenizer.exclude`     | List of excluded submodules. |
 
----
 
 ## 🧠 **Tokenization - Extracting Code for RAG**  
 
@@ -104,7 +100,6 @@ Application.exec({
 3. **Generates embeddings** using Hugging Face models.
 4. **Stores the dataset** in a binary `.bin` file.
 
----
 
 ## 📂 **Dataset - FAISS & Vector Storage**  
 
@@ -122,7 +117,6 @@ dataset.save(); // Saves the dataset in binary format
 dataset.load(); // Loads the dataset into memory
 ```
 
----
 
 ## 🔥 **Future Integration - Using LLMs with RAG**  
 
