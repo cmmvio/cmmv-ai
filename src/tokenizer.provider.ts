@@ -223,11 +223,6 @@ export class Tokenizer extends EventEmitter {
       normalize: true,
     });
 
-    if (output.data.length !== 384)
-      throw new Error(
-        `Embedding size mismatch: Expected 384, got ${output.data.length}`,
-      );
-
     return new Float32Array(output.data);
   }
 }

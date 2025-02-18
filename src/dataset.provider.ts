@@ -8,15 +8,16 @@ import { DatasetEntry } from './dataset.interface';
 export class Dataset {
   private logger = new Logger('Dataset');
   private data: DatasetEntry[] = [];
-  private indexSize = 384;
 
   addEntry(entry: DatasetEntry) {
+    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
+
     if (!(entry.vector instanceof Float32Array))
       throw new Error('Invalid vector format, expected Float32Array.');
 
-    if (entry.vector.length !== this.indexSize)
+    if (entry.vector.length !== indexSize)
       throw new Error(
-        `Vector length mismatch: Expected ${this.indexSize}, got ${entry.vector.length}`,
+        `Vector length mismatch: Expected ${indexSize}, got ${entry.vector.length}`,
       );
 
     this.logger.verbose(
@@ -26,8 +27,9 @@ export class Dataset {
   }
 
   save() {
+    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
     const filePath = Config.get('ai.tokenizer.output', './data.bin');
-    const buffer = Buffer.alloc(this.data.length * (this.indexSize * 4));
+    const buffer = Buffer.alloc(this.data.length * (indexSize * 4));
     fs.writeFileSync(
       filePath.replace('.bin', '.json'),
       JSON.stringify(
@@ -40,7 +42,7 @@ export class Dataset {
     this.logger.verbose(`Save index: ${filePath.replace('.bin', '.json')}`);
 
     this.data.forEach((entry, i) => {
-      Buffer.from(entry.vector.buffer).copy(buffer, i * (this.indexSize * 4));
+      Buffer.from(entry.vector.buffer).copy(buffer, i * (indexSize * 4));
     });
 
     this.logger.verbose(`Save dataset: ${filePath}`);
@@ -49,6 +51,7 @@ export class Dataset {
   }
 
   load() {
+    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
     const filePath = Config.get('ai.tokenizer.output', './data.bin');
 
     if (fs.existsSync(filePath)) {
@@ -61,8 +64,8 @@ export class Dataset {
         ...entry,
         vector: new Float32Array(
           buffer.buffer,
-          i * (this.indexSize * 4),
-          this.indexSize,
+          i * (indexSize * 4),
+          indexSize,
         ),
       }));
 

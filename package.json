@@ -30,7 +30,7 @@
         "release": "cmmv release",
         "lint": "cmmv lint",
         "prepare": "husky",
-        "sample:tokenizer": "cmmv run ./src/tokenizer.sample.ts",
+        "sample:tokenizer": "cmmv run ./samples/tokenizer.sample.ts",
         "test": "vitest",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
     },

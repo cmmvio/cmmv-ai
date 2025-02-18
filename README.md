@@ -44,6 +44,7 @@ module.exports = {
                 '../cmmv-*/src/**/*.ts',
                 '../cmmv-*/packages/**/*.ts'
             ],
+            indexSize: 1024,
             embeddingModel: process.env.EMBEDDING_MODEL || "Xenova/all-MiniLM-L6-v2",
             output: "./data.bin",
             ignore: [
@@ -63,12 +64,27 @@ module.exports = {
 | Config Option           | Description |
 |-------------------------|------------|
 | `huggingface.token`     | API token for Hugging Face models. |
+| `tokenizer.indexSize`    | Embedding Dimenions. |
 | `tokenizer.patterns`    | File search patterns for tokenization. |
 | `tokenizer.embeddingModel` | Default embedding model (`MiniLM`, `CodeLlama`, `DeepSeek`, etc.). |
 | `tokenizer.output`      | Path to save the binary dataset. |
 | `tokenizer.ignore`      | List of ignored files/extensions. |
 | `tokenizer.exclude`     | List of excluded submodules. |
 
+## Common Embedding Models
+
+| Model Name                                   | Downloads   | Embedding Dimenions   |
+|----------------------------------------------|------------|--------------------------|
+| WhereIsAI/UAE-Large-V1                       | 3.07m        | 1024                      |
+| mixedbread-ai/mxbai-embed-large-v1           | 1.06m        | 1024                      |
+| Xenova/bge-base-en-v1.5                      | 910k        | 768                      |
+| Supabase/gte-small                           | 453k        | 384                      |
+| Xenova/all-MiniLM-L6-v2                      | 226k        | 384                      |
+| Xenova/all-mpnet-base-v2                     | 124k        | 768                      |
+| Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 101k        | 384                      |
+| Supabase/all-MiniLM-L6-v2                    | 99.7k        | 384                      |
+
+*[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 
 ## 🧠 **Tokenization - Extracting Code for RAG**  
 

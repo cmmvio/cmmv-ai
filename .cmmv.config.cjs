@@ -8,13 +8,14 @@ module.exports = {
             token: process.env.HUGGINGFACE_HUB_TOKEN
         },
         tokenizer: {
+            indexSize: 1024,
             patterns: [
                 '../cmmv-*/**/*.ts',
                 '../cmmv-*/src/*.ts',
                 '../cmmv-*/src/**/*.ts',
                 '../cmmv-*/packages/**/*.ts'
             ],
-            embeddingModel: process.env.EMBEDDING_MODEL || "Xenova/all-MiniLM-L6-v2",
+            embeddingModel: process.env.EMBEDDING_MODEL || "WhereIsAI/UAE-Large-V1",
             output: "./data.bin",
             ignore: [
                 "node_modules", "*.d.ts", "*.cjs",
