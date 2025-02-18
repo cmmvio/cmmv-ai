@@ -1,5 +1,6 @@
 import { Service, Config, Logger } from '@cmmv/core';
 import { EventEmitter } from 'node:events';
+import { v4 as uuidv4 } from 'uuid';
 import * as fs from 'node:fs';
 import * as fg from 'fast-glob';
 import { parse } from '@babel/parser';
@@ -26,6 +27,13 @@ export class Tokenizer extends EventEmitter {
     this.embedder = await pipeline('feature-extraction', embeddingModel, {
       token,
     });
+    const provider = Config.get('ai.vector.provider');
+
+    if(provider !== "faiss"){
+        await this.dataset.loadAdapter();
+        await this.dataset.migrationToDatabase();
+    }
+
     this.logger.verbose(`Start embedder: ${embeddingModel}`);
   }
 
@@ -211,7 +219,7 @@ export class Tokenizer extends EventEmitter {
     try {
       const snippet = content.slice(path.node.start!, path.node.end!);
       const vector = await this.generateEmbedding(snippet);
-      this.dataset.addEntry({ filename, type, value: name, snippet, vector });
+      this.dataset.addEntry({ id: uuidv4(), filename, type, value: name, snippet, vector });
     } catch (e) {
       this.logger.error(e.message, filename);
     }

@@ -6,7 +6,9 @@ class DatasetSample {
     async start() {
         const { Dataset } = await import('../src/dataset.provider')
         const dataset = new Dataset();
-        dataset.load();
+        await dataset.load();
+        await dataset.loadAdapter();
+        await dataset.migrationToDatabase();
     }
 }
 

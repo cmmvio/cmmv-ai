@@ -3,82 +3,140 @@ import * as fs from 'node:fs';
 import * as faiss from 'faiss-node';
 
 import { DatasetEntry } from './dataset.interface';
+import { VectorAdapter } from "./vector-database.abstract";
 
 @Service('ai-dataset')
 export class Dataset {
-  private logger = new Logger('Dataset');
-  private data: DatasetEntry[] = [];
+  	private logger = new Logger('Dataset');
+	private data: DatasetEntry[] = [];
+	private indexSize: any;
+    private indexFAISS: faiss.IndexFlatL2;
+	private adapter?: VectorAdapter;
 
-  addEntry(entry: DatasetEntry) {
-    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
+	constructor() {
+		const indexSize = Config.get('ai.tokenizer.indexSize', 384);
+        this.indexSize = indexSize;
+		this.indexFAISS = new faiss.IndexFlatL2(indexSize);
+	}
 
-    if (!(entry.vector instanceof Float32Array))
-      throw new Error('Invalid vector format, expected Float32Array.');
+	public async loadAdapter() {
+        const provider = Config.get('ai.vector.provider', 'faiss');
 
-    if (entry.vector.length !== indexSize)
-      throw new Error(
-        `Vector length mismatch: Expected ${indexSize}, got ${entry.vector.length}`,
-      );
+        switch (provider) {
+            case 'qdrant':
+                const { QdrantAdapter } = await import('./qdrant.adapter');
+                this.adapter = new QdrantAdapter();
+                this.adapter.connect()
+            break;
+            case 'milvus':
+                const { MilvusAdapter } = await import('./milvus.adapter');
+                this.adapter = new MilvusAdapter();
+                this.adapter.connect()
+            break;
+            case 'neo4j':
+                const { Neo4jAdapter } = await import('./neo4j.adapter');
+                this.adapter = new Neo4jAdapter();
+                this.adapter.connect()
+            break;
+            default:
+              this.adapter = undefined;
+        }
+	}
 
-    this.logger.verbose(
-      `Index ${entry.type}:${entry.value} (${entry.filename})`,
-    );
+	addEntry(entry: DatasetEntry) {
+		if (!(entry.vector instanceof Float32Array))
+			throw new Error('Invalid vector format, expected Float32Array.');
 
-    this.data.push(entry);
-  }
+		if (entry.vector.length !== this.indexSize){
+			throw new Error(
+				`Vector length mismatch: Expected ${this.indexSize}, got ${entry.vector.length}`,
+			);
+		}
 
-  save() {
-    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
-    const filePath = Config.get('ai.tokenizer.output', './data.bin');
-    const buffer = Buffer.alloc(this.data.length * (indexSize * 4));
-    fs.writeFileSync(
-      filePath.replace('.bin', '.json'),
-      JSON.stringify(
-        this.data.map(({ vector, ...rest }) => rest),
-        null,
-        2,
-      ),
-    );
+		this.logger.verbose(`Index ${entry.type}:${entry.value} (${entry.filename})`);
+		this.data.push(entry);
+        this.indexFAISS.add(Array.from(entry.vector));
 
-    this.logger.verbose(`Save index: ${filePath.replace('.bin', '.json')}`);
+        if (this.adapter)
+            this.adapter.saveVector(entry);
+	}
 
-    this.data.forEach((entry, i) => {
-      Buffer.from(entry.vector.buffer).copy(buffer, i * (indexSize * 4));
-    });
+	save() {
+		const filePath = Config.get('ai.tokenizer.output', './data.bin');
+		const buffer = Buffer.alloc(this.data.length * (this.indexSize * 4));
+		fs.writeFileSync(
+			filePath.replace('.bin', '.json'),
+			JSON.stringify(
+				this.data.map(({ vector, ...rest }) => rest),
+				null,
+				2,
+			),
+		);
 
-    this.logger.verbose(`Save dataset: ${filePath}`);
+		this.logger.verbose(`Save index: ${filePath.replace('.bin', '.json')}`);
 
-    fs.writeFileSync(filePath, buffer);
-  }
+		this.data.forEach((entry, i) => {
+			Buffer.from(entry.vector.buffer).copy(buffer, i * (this.indexSize * 4));
+		});
 
-  load() {
-    const indexSize = Config.get('ai.tokenizer.indexSize', 384);
-    const filePath = Config.get('ai.tokenizer.output', './data.bin');
+		this.logger.verbose(`Save dataset: ${filePath}`);
+		fs.writeFileSync(filePath, buffer);
+	}
 
-    if (fs.existsSync(filePath)) {
-      const jsonData = JSON.parse(
-        fs.readFileSync(filePath.replace('.bin', '.json'), 'utf-8'),
-      );
-      const buffer = fs.readFileSync(filePath);
+	load() {
+		const filePath = Config.get('ai.tokenizer.output', './data.bin');
 
-      this.data = jsonData.map((entry: any, i: number) => ({
-        ...entry,
-        vector: new Float32Array(
-          buffer.buffer,
-          i * (indexSize * 4),
-          indexSize,
-        ),
-      }));
+		if (fs.existsSync(filePath)) {
+			const jsonData = JSON.parse(
+				fs.readFileSync(filePath.replace('.bin', '.json'), 'utf-8'),
+			);
+			const buffer = fs.readFileSync(filePath);
 
-      this.logger.verbose(`Loaded dataset: ${filePath} (${this.data.length} inputs)`);
+			this.data = jsonData.map((entry: any, i: number) => ({
+				...entry,
+				vector: new Float32Array(
+                    buffer.buffer,
+                    i * (this.indexSize * 4),
+                    this.indexSize,
+				),
+			}));
+
+            this.data.map(({ vector }) => this.indexFAISS.add(Array.from(vector)));
+			this.logger.verbose(`Loaded dataset: ${filePath} (${this.data.length} inputs)`);
+		}
+	}
+
+    migrationToDatabase(){
+        if (this.adapter && this.data && this.data.length > 0)
+            this.data.map(async(entry) => await this.adapter.saveVector(entry));
     }
-  }
 
-    /*search(queryVector: Float32Array, topK = 5): DatasetEntry[] {
-        const D = new Float32Array(topK);
-        const I = new Int32Array(topK);
-        this.index.search(queryVector, topK, D, I);
+    async search(queryVector: Float32Array, topK = 5): Promise<DatasetEntry[]> {
+        if (!(queryVector instanceof Float32Array)) {
+            throw new Error('Invalid query vector format, expected Float32Array.');
+        }
 
-        return I.map((idx) => (idx >= 0 ? this.data[idx] : null)).filter((item) => item !== null) as DatasetEntry[];
-    }*/
+        if (queryVector.length !== this.indexSize) {
+            throw new Error(
+                `Vector length mismatch: Expected ${this.indexSize}, got ${queryVector.length}`,
+            );
+        }
+
+        this.logger.verbose(`Searching for top ${topK} matches`);
+
+        if (this.adapter) {
+            return this.adapter.searchVector(queryVector, topK);
+        }
+        else{
+            const queryArray = Array.from(queryVector);
+            const results = this.indexFAISS.search(queryArray, topK);
+            console.log(results);
+
+            /*const results = I.map((idx, i) => ({
+                entry: idx >= 0 ? this.data[idx] : null,
+                distance: D[i],
+            })).filter(result => result.entry !== null) as { entry: DatasetEntry, distance: number }[];*/
+            //return results.map(result => result.entry);
+        }
+    }
 }

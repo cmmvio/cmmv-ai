@@ -180,7 +180,6 @@ The next step is integrating **pre-trained models** for **code understanding and
 - [x] Tokenization of **functions, classes, interfaces, decorators**.
 - [x] **FAISS-based vector search** for in-memory retrieval.
 - [ ] Integration with **Qdrant, Milvus, Neo4j**.
-- [ ] Adding support for **Elasticsearch, Pinecone**.
 - [ ] Using **DeepSeek Code** for **LLM-powered code generation**.
 
 ## 📚 **References**

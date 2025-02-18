@@ -1,9 +1,9 @@
 import { Config, Logger } from '@cmmv/core';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { VectorDatabaseAdapter } from './vector-database.abstract';
+import { VectorAdapter } from './vector.abstract';
 import { DatasetEntry } from "./dataset.interface";
 
-export class QdrantAdapter extends VectorDatabaseAdapter {
+export class QdrantAdapter extends VectorAdapter {
     private client: QdrantClient;
     private collection: string;
     private logger = new Logger('QdrantAdapter');
@@ -14,11 +14,34 @@ export class QdrantAdapter extends VectorDatabaseAdapter {
 
         this.client = new QdrantClient({ url });
         this.logger.verbose(`Connected to Qdrant at ${url}`);
+        await this.ensureCollectionExists();
+    }
+
+    private async ensureCollectionExists() {
+        try {
+            await this.client.getCollection(this.collection);
+            this.logger.verbose(`Collection '${this.collection}' already exists.`);
+        } catch (error: any) {
+            if (error?.status === 404) {
+                this.logger.warning(`Collection '${this.collection}' not found, creating...`);
+
+                await this.client.createCollection(this.collection, {
+                    vectors: {
+                        size: Config.get('ai.tokenizer.indexSize', 384),
+                        distance: "Cosine"
+                    }
+                });
+
+                this.logger.verbose(`Collection '${this.collection}' created.`);
+            } else {
+                throw new Error(`Error checking collection '${this.collection}': ${error.message}`);
+            }
+        }
     }
 
     async saveVector(entry: DatasetEntry) {
         await this.client.upsert(this.collection, {
-            points: [{ id: entry.value, vector: Array.from(entry.vector) }],
+            points: [{ id: entry.id, vector: Array.from(entry.vector) }],
         });
     }
 

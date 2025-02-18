@@ -6,7 +6,7 @@ export * from './tokenizer.interface';
 export * from './tokenizer.provider';
 
 //Adapter
-export * from "./vector-database.abstract";
+export * from "./vector.abstract";
 export * from "./qdrant.adapter";
 
 //Module
