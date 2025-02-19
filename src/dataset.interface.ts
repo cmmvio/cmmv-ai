@@ -1,20 +1,8 @@
 export interface DatasetEntry {
     id: string;
-    filename: string;
-    type:
-        | 'Function'
-        | 'Class'
-        | 'Interface'
-        | 'Enum'
-        | 'Variable'
-        | 'Symbol'
-        | 'Decorator'
-        | 'AbstractClass'
-        | 'Constant'
-        | 'Documentation';
-    value?: string;
-    snippet: string;
+    content: string;
     vector: Float32Array;
+    metadata?: any;
     score?: number;
-    keywords?: string[]
+    document?: any;
 }

@@ -7,7 +7,7 @@ class TokenizerSample {
     @Hook(HooksType.onInitialize)
     async start() {
         const tokenizer = new Tokenizer();
-        tokenizer.start();
+        tokenizer.initialize();
     }
 }
 

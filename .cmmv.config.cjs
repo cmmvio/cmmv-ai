@@ -10,8 +10,12 @@ module.exports = {
             allowRemoteModels: true
         },
         tokenizer: {
-            indexSize: 384,
-            useKeyBERT: true,
+            provider: "huggingface",
+            model: "sentence-transformers/distilbert-base-nli-mean-tokens",
+            indexSize: 768,
+            useKeyBERT: false,
+            chunkSize: 500,
+            chunkOverlap: 100,
             patterns: [
                 '../cmmv/**/*.ts',
                 '../cmmv/src/**/*.ts',
@@ -22,7 +26,6 @@ module.exports = {
                 '../cmmv-*/packages/**/*.ts',
                 '../cmmv-docs/docs/en/**/*.md'
             ],
-            embeddingModel: "Xenova/all-MiniLM-L6-v2",
             output: "./samples/data.bin",
             ignore: [
                 "node_modules", "*.d.ts", "*.cjs",
@@ -32,11 +35,14 @@ module.exports = {
                 "cmmv-formbuilder", "cmmv-ui",
                 "cmmv-language-tools", "cmmv-vue",
                 "cmmv-reactivity", "cmmv-vite-plugin",
-                "eslint.config.ts", "vitest.config.ts"
+                "eslint.config.ts", "vitest.config.ts",
+                "auto-imports.d.ts", ".d.ts", ".cjs",
+                ".spec.ts", ".test.ts", "/tools/gulp/",
+                "node_modules"
             ]
         },
         vector: {
-            provider: "faiss",
+            provider: "qdrant",
             qdrant: {
                 url: 'http://localhost:6333',
                 collection: 'embeddings'

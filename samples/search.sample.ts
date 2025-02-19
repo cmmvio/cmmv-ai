@@ -10,7 +10,6 @@ class DatasetSample {
         const dataset = new Dataset();
         await dataset.load();
         await dataset.loadAdapter();
-        //await dataset.migrationToDatabase();
         const search = new Search(dataset);
         await search.initialize();
         const result = await search.find("como criar um controller do cmmv ?")

@@ -1,9 +1,9 @@
 import { MilvusClient } from '@zilliz/milvus2-sdk-node';
 import { Config, Logger } from '@cmmv/core';
-import { VectorAdapter } from './vector.abstract';
-import { DatasetEntry } from "./dataset.interface";
+import { VectorDatabaseAdapter } from './database.abstract';
+import { DatasetEntry } from "../dataset.interface";
 
-export class MilvusAdapter extends VectorAdapter {
+export class MilvusAdapter extends VectorDatabaseAdapter {
     private client: MilvusClient;
     private logger = new Logger('MilvusAdapter');
 
@@ -16,10 +16,10 @@ export class MilvusAdapter extends VectorAdapter {
     async saveVector(entry: DatasetEntry) {
         await this.client.insert({
             collection_name: 'embeddings',
-            fields_data: [{ name: entry.value, vector: Array.from(entry.vector) }],
+            fields_data: [{ content: entry.content, vector: Array.from(entry.vector) }],
         });
 
-        this.logger.verbose(`Saved vector: ${entry.value}`);
+        this.logger.verbose(`Saved vector: ${entry.id}`);
     }
 
     async searchVector(queryVector: Float32Array, topK = 5): Promise<any[]> {

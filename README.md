@@ -46,6 +46,7 @@ module.exports = {
                 '../cmmv-*/packages/**/*.ts'
             ],
             indexSize: 1024,
+            useKeyBERT: true, // Set to false to use TF-IDF instead
             embeddingModel: "Xenova/all-MiniLM-L6-v2",
             output: "./data.bin",
             ignore: [
@@ -184,6 +185,7 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 |----------------------------------------------|------------|--------------------------|
 | WhereIsAI/UAE-Large-V1                       | 3.07m        | 1024                      |
 | mixedbread-ai/mxbai-embed-large-v1           | 1.06m        | 1024                      |
+| sentence-transformers/distilbert-base-nli-mean-tokens                      | 674k        | 768                      |
 | Xenova/bge-base-en-v1.5                      | 910k        | 768                      |
 | Supabase/gte-small                           | 453k        | 384                      |
 | Xenova/all-MiniLM-L6-v2                      | 226k        | 384                      |

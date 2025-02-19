@@ -1,12 +1,13 @@
 import { Config, Logger } from '@cmmv/core';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { VectorAdapter } from './vector.abstract';
-import { DatasetEntry } from "./dataset.interface";
+import { VectorDatabaseAdapter } from './database.abstract';
+import { DatasetEntry } from "../dataset.interface";
 
-export class QdrantAdapter extends VectorAdapter {
+export class QdrantAdapter extends VectorDatabaseAdapter {
     private client: QdrantClient;
     private collection: string;
     private logger = new Logger('QdrantAdapter');
+    private points: any[] = [];
 
     async connect() {
         const url = Config.get('ai.vector.qdrant.url', 'http://localhost:6333');
@@ -14,6 +15,7 @@ export class QdrantAdapter extends VectorAdapter {
         this.client = new QdrantClient({ url, timeout: Infinity });
         this.logger.verbose(`Connected to Qdrant at ${url}`);
         await this.ensureCollectionExists();
+        setInterval(() => this.sendToDatabase(), 1000);
     }
 
     private async ensureCollectionExists() {
@@ -39,28 +41,32 @@ export class QdrantAdapter extends VectorAdapter {
     }
 
     async saveVector(entry: DatasetEntry) {
-        let response;
-
         try{
-            response = await this.client.upsert(this.collection, {
-                points: [{ id: entry.id, vector: Array.from(entry.vector), payload: {
-                    value: entry.value,
-                    type: entry.type,
-                    snippet: entry.snippet,
-                } }],
+            this.points.push({
+                id: entry.id,
+                vector: Array.from(entry.vector),
+                payload: {
+                    content: entry.content,
+                    metadata: entry.metadata
+                }
             });
         }
         catch(e) {
-            console.log(response)
             this.logger.error(e.message);
-            console.error(e);
-            process.exit(1);
+        }
+    }
+
+    async sendToDatabase(){
+        if(this.points.length > 0){
+            try{
+                await this.client.upsert(this.collection, { points: this.points });
+                this.points = [];
+            }
+            catch{ }
         }
     }
 
     async searchVector(queryVector: Float32Array, topK = 5): Promise<any[]> {
-        const collection = await this.client.getCollection(this.collection);
-
         const result = await this.client.search(this.collection, {
             vector: Array.from(queryVector),
             limit: topK,
@@ -76,9 +82,12 @@ export class QdrantAdapter extends VectorAdapter {
     }
 
     async clear() {
-        await this.client.deleteCollection(this.collection);
+        const collectionExists = await this.client.collectionExists(this.collection);
 
-        this.logger.verbose(`Collection '${this.collection}' deleted.`);
+        if(collectionExists) {
+            await this.client.deleteCollection(this.collection);
+            this.logger.verbose(`Collection '${this.collection}' deleted.`);
+        }
 
         await this.client.createCollection(this.collection, {
             vectors: {

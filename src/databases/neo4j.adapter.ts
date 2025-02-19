@@ -1,9 +1,9 @@
 import neo4j from 'neo4j-driver';
 import { Config, Logger } from '@cmmv/core';
-import { VectorAdapter } from './vector.abstract';
-import { DatasetEntry } from "./dataset.interface";
+import { VectorDatabaseAdapter } from './database.abstract';
+import { DatasetEntry } from "../dataset.interface";
 
-export class Neo4jAdapter extends VectorAdapter {
+export class Neo4jAdapter extends VectorDatabaseAdapter {
 
     private driver;
     private session;
@@ -22,10 +22,10 @@ export class Neo4jAdapter extends VectorAdapter {
     async saveVector(entry: DatasetEntry) {
         await this.session.run(
             'MERGE (e:Embedding {id: $id}) SET e.vector = $vector',
-            { id: entry.value, vector: Array.from(entry.vector) }
+            { id: entry.id, vector: Array.from(entry.vector) }
         );
 
-        this.logger.verbose(`Saved vector: ${entry.value}`);
+        this.logger.verbose(`Saved vector: ${entry.id}`);
     }
 
     async searchVector(queryVector: Float32Array, topK = 5): Promise<any[]> {

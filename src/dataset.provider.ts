@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as faiss from 'faiss-node';
 
 import { DatasetEntry } from './dataset.interface';
-import { VectorAdapter } from "./vector.abstract";
+import { VectorDatabaseAdapter } from "./databases";
 
 @Service('ai-dataset')
 export class Dataset {
@@ -11,7 +11,7 @@ export class Dataset {
 	private data: DatasetEntry[] = [];
 	private indexSize: any;
     private indexFAISS: faiss.IndexFlatL2;
-	private adapter?: VectorAdapter;
+	private adapter?: VectorDatabaseAdapter;
 
 	constructor() {
 		const indexSize = Config.get('ai.tokenizer.indexSize', 384);
@@ -24,17 +24,17 @@ export class Dataset {
 
         switch (provider) {
             case 'qdrant':
-                const { QdrantAdapter } = await import('./qdrant.adapter');
+                const { QdrantAdapter } = await import('./databases/qdrant.adapter');
                 this.adapter = new QdrantAdapter();
                 this.adapter.connect()
             break;
             case 'milvus':
-                const { MilvusAdapter } = await import('./milvus.adapter');
+                const { MilvusAdapter } = await import('./databases/milvus.adapter');
                 this.adapter = new MilvusAdapter();
                 this.adapter.connect()
             break;
             case 'neo4j':
-                const { Neo4jAdapter } = await import('./neo4j.adapter');
+                const { Neo4jAdapter } = await import('./databases/neo4j.adapter');
                 this.adapter = new Neo4jAdapter();
                 this.adapter.connect()
             break;
@@ -43,7 +43,7 @@ export class Dataset {
         }
 	}
 
-	async addEntry(entry: DatasetEntry) {
+	async addEntry(entry: DatasetEntry, metadata: any) {
 		if (!(entry.vector instanceof Float32Array))
 			throw new Error('Invalid vector format, expected Float32Array.');
 
@@ -53,8 +53,8 @@ export class Dataset {
 			);
 		}
 
-		this.logger.verbose(`Index ${entry.type}:${entry.value} (${entry.filename})`);
-		this.data.push(entry);
+		this.logger.verbose(`Index ${entry.id}: ${entry.metadata.source}`);
+		this.data.push({ ...entry, document: metadata });
         this.indexFAISS.add(Array.from(entry.vector));
 
         if (this.adapter)
@@ -62,6 +62,7 @@ export class Dataset {
 	}
 
 	save() {
+        //Index
 		const filePath = Config.get('ai.tokenizer.output', './data.bin');
 		const buffer = Buffer.alloc(this.data.length * (this.indexSize * 4));
 		fs.writeFileSync(
@@ -76,6 +77,7 @@ export class Dataset {
 
 		this.logger.verbose(`Save Index: ${filePath.replace('.bin', '.json')}`);
 
+        //Dataset
 		this.data.forEach((entry, i) => {
 			Buffer.from(entry.vector.buffer).copy(buffer, i * (this.indexSize * 4));
 		});
