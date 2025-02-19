@@ -324,11 +324,15 @@ The next step is integrating **pre-trained models** for **code understanding and
 ## 📖 **Roadmap**
 - [x] Tokenization of **functions, classes, interfaces, decorators**.
 - [x] **FAISS-based vector search** for in-memory retrieval.
+- [x] Integration with KeyBert for keyword generation.
+- [ ] Externalize HTTP server for communication with APIs
 - [ ] Integration with **Qdrant, Milvus, Neo4j**.
 - [ ] Using **DeepSeek Code** for **LLM-powered code generation**.
+- [ ] Integrate external LLM APIs like ChatGPT, Gemini, etc.
 
 ## 📚 **References**
+- **Transformers.js** [Transformers Documentation](https://github.com/huggingface/transformers)
 - **Qdrant:** [Qdrant Documentation](https://qdrant.tech/documentation/)  
-- **Weaviate:** [Weaviate Documentation](https://weaviate.io/developers/weaviate)  
 - **Milvus:** [Milvus Documentation](https://milvus.io/docs/)  
 - **Neo4j:** [Neo4j Documentation](https://neo4j.com/developer/)  
+- **KeyBert** [KeyBert Documentation](https://github.com/MaartenGr/KeyBERT)
