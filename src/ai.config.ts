@@ -9,6 +9,15 @@ export const AIConfig: ConfigSchema = {
                 token: {
                     type: 'string',
                     required: false
+                },
+                localModelPath: {
+                    type: 'string',
+                    required: false
+                },
+                allowRemoteModels: {
+                    type: 'boolean',
+                    required: false,
+                    default: true
                 }
             }
         },

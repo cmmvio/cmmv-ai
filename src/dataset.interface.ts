@@ -10,8 +10,11 @@ export interface DatasetEntry {
         | 'Symbol'
         | 'Decorator'
         | 'AbstractClass'
-        | 'Constant';
-    value: string;
+        | 'Constant'
+        | 'Documentation';
+    value?: string;
     snippet: string;
     vector: Float32Array;
+    score?: number;
+    keywords?: string[]
 }

@@ -37,4 +37,8 @@ export class MilvusAdapter extends VectorAdapter {
             vector: new Float32Array(r.vector),
         }));
     }
+
+    async clear(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

@@ -4,6 +4,7 @@ import { VectorAdapter } from './vector.abstract';
 import { DatasetEntry } from "./dataset.interface";
 
 export class Neo4jAdapter extends VectorAdapter {
+
     private driver;
     private session;
     private logger = new Logger('Neo4jAdapter');
@@ -40,5 +41,9 @@ export class Neo4jAdapter extends VectorAdapter {
             snippet: '',
             vector: new Float32Array(record.get('e.vector')),
         }));
+    }
+
+    async clear(): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

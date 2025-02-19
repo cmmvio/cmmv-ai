@@ -11,8 +11,7 @@ export class QdrantAdapter extends VectorAdapter {
     async connect() {
         const url = Config.get('ai.vector.qdrant.url', 'http://localhost:6333');
         this.collection = Config.get('ai.vector.qdrant.collection', 'embeddings');
-
-        this.client = new QdrantClient({ url });
+        this.client = new QdrantClient({ url, timeout: Infinity });
         this.logger.verbose(`Connected to Qdrant at ${url}`);
         await this.ensureCollectionExists();
     }
@@ -40,12 +39,28 @@ export class QdrantAdapter extends VectorAdapter {
     }
 
     async saveVector(entry: DatasetEntry) {
-        await this.client.upsert(this.collection, {
-            points: [{ id: entry.id, vector: Array.from(entry.vector) }],
-        });
+        let response;
+
+        try{
+            response = await this.client.upsert(this.collection, {
+                points: [{ id: entry.id, vector: Array.from(entry.vector), payload: {
+                    value: entry.value,
+                    type: entry.type,
+                    snippet: entry.snippet,
+                } }],
+            });
+        }
+        catch(e) {
+            console.log(response)
+            this.logger.error(e.message);
+            console.error(e);
+            process.exit(1);
+        }
     }
 
     async searchVector(queryVector: Float32Array, topK = 5): Promise<any[]> {
+        const collection = await this.client.getCollection(this.collection);
+
         const result = await this.client.search(this.collection, {
             vector: Array.from(queryVector),
             limit: topK,
@@ -54,9 +69,24 @@ export class QdrantAdapter extends VectorAdapter {
         return result.map((r) => ({
             filename: '',
             type: 'Unknown',
-            value: r.id.toString(),
+            id: r.id.toString(),
             snippet: '',//@ts-ignore
             vector: new Float32Array(r.vector),
         }));
+    }
+
+    async clear() {
+        await this.client.deleteCollection(this.collection);
+
+        this.logger.verbose(`Collection '${this.collection}' deleted.`);
+
+        await this.client.createCollection(this.collection, {
+            vectors: {
+                size: Config.get('ai.tokenizer.indexSize', 384),
+                distance: "Cosine"
+            }
+        });
+
+        this.logger.verbose(`Collection '${this.collection}' created.`);
     }
 }

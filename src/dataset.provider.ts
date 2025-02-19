@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as faiss from 'faiss-node';
 
 import { DatasetEntry } from './dataset.interface';
-import { VectorAdapter } from "./vector-database.abstract";
+import { VectorAdapter } from "./vector.abstract";
 
 @Service('ai-dataset')
 export class Dataset {
@@ -43,7 +43,7 @@ export class Dataset {
         }
 	}
 
-	addEntry(entry: DatasetEntry) {
+	async addEntry(entry: DatasetEntry) {
 		if (!(entry.vector instanceof Float32Array))
 			throw new Error('Invalid vector format, expected Float32Array.');
 
@@ -58,7 +58,7 @@ export class Dataset {
         this.indexFAISS.add(Array.from(entry.vector));
 
         if (this.adapter)
-            this.adapter.saveVector(entry);
+            await this.adapter.saveVector(entry);
 	}
 
 	save() {
@@ -71,16 +71,17 @@ export class Dataset {
 				null,
 				2,
 			),
+            { encoding: "utf-8" }
 		);
 
-		this.logger.verbose(`Save index: ${filePath.replace('.bin', '.json')}`);
+		this.logger.verbose(`Save Index: ${filePath.replace('.bin', '.json')}`);
 
 		this.data.forEach((entry, i) => {
 			Buffer.from(entry.vector.buffer).copy(buffer, i * (this.indexSize * 4));
 		});
 
-		this.logger.verbose(`Save dataset: ${filePath}`);
-		fs.writeFileSync(filePath, buffer);
+		this.logger.verbose(`Save Dataset: ${filePath}`);
+		fs.writeFileSync(filePath, buffer, { encoding: "utf-8" });
 	}
 
 	load() {
@@ -111,6 +112,13 @@ export class Dataset {
             this.data.map(async(entry) => await this.adapter.saveVector(entry));
     }
 
+    async clearDatabase(){
+        if (this.adapter){
+            this.logger.verbose(`Clear Vector Database`);
+            await this.adapter.clear();
+        }
+    }
+
     async search(queryVector: Float32Array, topK = 5): Promise<DatasetEntry[]> {
         if (!(queryVector instanceof Float32Array)) {
             throw new Error('Invalid query vector format, expected Float32Array.');
@@ -125,18 +133,21 @@ export class Dataset {
         this.logger.verbose(`Searching for top ${topK} matches`);
 
         if (this.adapter) {
-            return this.adapter.searchVector(queryVector, topK);
+            const dbResult = await this.adapter.searchVector(queryVector, topK);
+            return dbResult.map((result) => {
+                const registry = this.data.find((item) => item.id === result.id);
+                return registry ? { ...registry } : null;
+            }).filter(item => item);
         }
         else{
             const queryArray = Array.from(queryVector);
-            const results = this.indexFAISS.search(queryArray, topK);
-            console.log(results);
+            const result = this.indexFAISS.search(queryArray, topK);
 
-            /*const results = I.map((idx, i) => ({
-                entry: idx >= 0 ? this.data[idx] : null,
-                distance: D[i],
-            })).filter(result => result.entry !== null) as { entry: DatasetEntry, distance: number }[];*/
-            //return results.map(result => result.entry);
+            return result.labels.map((idx, index) => {
+                let data = this.data[idx];
+                data.score = result.distances[index];
+                return data;
+            });
         }
     }
 }
