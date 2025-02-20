@@ -97,7 +97,7 @@ For other operating systems, refer to the official [Python download page](https:
 Once Python is installed, install the Hugging Face CLI using **pip**:
 
 ```sh
-pip install -U "huggingface_hub[cli]"
+pip3 install -U "huggingface_hub[cli]"
 ```
 
 ### 3️⃣ **Ensure the CLI is Recognized**
@@ -231,7 +231,7 @@ Application.exec({
 
 ### 🔹 **How It Works**
 1. **Scans project directories** based on the `patterns` config.
-2. **Parses TypeScript/JavaScript files**, extracting **functions, classes, enums, interfaces, constants, and decorators**.
+2. **Parses TypeScript/JavaScript/Markdown files**, extracting **functions, classes, enums, interfaces, constants, and decorators**.
 3. **Generates embeddings** using Hugging Face models.
 4. **Stores the dataset** in a binary `.bin` file.
 
