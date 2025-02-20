@@ -195,6 +195,16 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 
+## Others Embeddings Support
+
+| Name      | Model                                      | Documentation Link |
+|-----------|-------------------------------------------|--------------------|
+| OpenAI    | text-embedding-3-large                   | [OpenAI](https://js.langchain.com/docs/integrations/text_embedding/openai/) |
+| Google    | gemini-pro                               | [Google](https://js.langchain.com/docs/integrations/text_embedding/google_generativeai/) |
+| Pinecone  | multilingual-e5-large                    | [Pinecone](https://js.langchain.com/docs/integrations/text_embedding/pinecone/) |
+| Cohere    | embed-english-v3.0                       | [Cohere](https://js.langchain.com/docs/integrations/text_embedding/cohere/) |
+| LlamaCpp  | gguf-llama3-Q4_0.bin                     | [LlamaCpp](https://js.langchain.com/docs/integrations/text_embedding/llama_cpp/) |
+
 ## 🧠 Tokenization - Extracting Code for RAG 
 
 The **Tokenizer** class scans directories, extracts tokens, and generates vector embeddings using a `transformers` model.  
