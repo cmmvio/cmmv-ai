@@ -1,3 +1,20 @@
+## 0.0.3 (2025-02-20)
+
+
+### Bug Fixes
+
+* qdrant adapter ([2712d19](https://github.com/cmmvio/cmmv-ai/commit/2712d19e756e0afb362d49d2a3043e96ce24ca33))
+* tokeziner ([c98f3fc](https://github.com/cmmvio/cmmv-ai/commit/c98f3fcdf97728d675c5508efd7260cc60bfc45d))
+
+
+### Features
+
+* keybert, FAISS search ([131f55e](https://github.com/cmmvio/cmmv-ai/commit/131f55e8d83312c7c6b20f8bd9d05a3851e748f5))
+* qdrant adapter ([45047dd](https://github.com/cmmvio/cmmv-ai/commit/45047dd97ebcb77fcd019f7b12de03b068e1669b))
+* tokenizer, dataset ([a83efaf](https://github.com/cmmvio/cmmv-ai/commit/a83efaf44b0269a940fd85e041a2b3a0f02e68c6))
+
+
+
 ## 0.0.2 (2025-02-16)
 
 

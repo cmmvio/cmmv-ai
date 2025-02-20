@@ -1,9 +1,13 @@
 {
-    "name": "cmmv-module",
-    "version": "0.0.2",
+    "name": "@cmmv/ai",
+    "version": "0.0.3",
     "description": "",
-    "author": "",
-    "keywords": [],
+    "author": "Andre Ferreira",
+    "keywords": [
+        "cmmv",
+        "ai",
+        ""
+    ],
     "main": "./dist/cjs/main.js",
     "module": "./dist/esm/main.js",
     "types": "./dist/types/main.d.ts",
@@ -13,7 +17,7 @@
             "require": "./dist/cjs/main.js"
         }
     },
-    "license": "UNLICENSED",
+    "license": "MIT",
     "publishConfig": {
         "access": "public"
     },
@@ -84,7 +88,6 @@
         "glob": "^11.0.1",
         "langchain": "^0.3.19",
         "natural": "^8.0.1",
-        "python-shell": "^5.0.0",
         "remark-parse": "^11.0.0",
         "unified": "^11.0.5",
         "uuid": "^11.0.5"
