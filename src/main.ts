@@ -6,18 +6,17 @@ export * from './tokenizer.interface';
 export * from './tokenizer.provider';
 export * from './search.provider';
 
-export * from "./databases";
-export * from "./utils";
+export * from './embeddings';
+export * from './vectorstores';
+export * from './utils';
 
 //Module
-import { AIConfig } from "./ai.config";
+import { AIConfig } from './ai.config';
 import { Tokenizer } from './tokenizer.provider';
 import { Dataset } from './dataset.provider';
-import { Search } from "./search.provider";
+import { Search } from './search.provider';
 
 export const AIModule = new Module('ai', {
-    configs: [AIConfig],
-    providers: [
-        Tokenizer, Dataset, Search
-    ]
+  configs: [AIConfig],
+  providers: [Tokenizer, Dataset, Search],
 });

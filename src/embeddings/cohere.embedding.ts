@@ -6,7 +6,7 @@ export class CohereEmbedding extends AbstractEmbedding {
 
   public override async initialize() {
     const { CohereEmbeddings } = await import('@langchain/cohere');
-    const model = Config.get('ai.tokenizer.model');
+    const model = Config.get('ai.tokenizer.model', 'embed-english-v3.0');
     this.embedder = new CohereEmbeddings({ model: model });
     this.logger.verbose(`Start Model: ${model}`);
   }

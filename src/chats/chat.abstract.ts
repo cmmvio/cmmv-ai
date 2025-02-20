@@ -1,10 +1,14 @@
-
-import { Logger } from "@cmmv/core";
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { Logger } from '@cmmv/core';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { type BaseLanguageModelInput } from '@langchain/core/language_models/base';
 
 export abstract class AbstractChat {
-    protected model: BaseChatModel;
-    protected logger: Logger;
+  protected llm: BaseChatModel;
+  protected logger: Logger;
 
-    public initialize() {}
+  public initialize() {}
+
+  invoke(input: BaseLanguageModelInput, options?: any): Promise<any> {
+    return this.llm.invoke(input, options);
+  }
 }

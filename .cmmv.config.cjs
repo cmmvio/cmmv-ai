@@ -14,16 +14,16 @@ module.exports = {
             model: "sentence-transformers/distilbert-base-nli-mean-tokens",
             indexSize: 768,
             useKeyBERT: false,
-            chunkSize: 500,
-            chunkOverlap: 100,
+            chunkSize: 1000,
+            chunkOverlap: 0,
             patterns: [
-                '../cmmv/**/*.ts',
-                '../cmmv/src/**/*.ts',
-                '../cmmv/packages/**/*.ts',
-                '../cmmv-*/**/*.ts',
-                '../cmmv-*/src/*.ts',
-                '../cmmv-*/src/**/*.ts',
-                '../cmmv-*/packages/**/*.ts',
+                //'../cmmv/**/*.ts',
+                //'../cmmv/src/**/*.ts',
+                //'../cmmv/packages/**/*.ts',
+                //'../cmmv-*/**/*.ts',
+                //'../cmmv-*/src/*.ts',
+                //'../cmmv-*/src/**/*.ts',
+                //'../cmmv-*/packages/**/*.ts',
                 '../cmmv-docs/docs/en/**/*.md'
             ],
             output: "./samples/data.bin",
@@ -48,14 +48,13 @@ module.exports = {
                 collection: 'embeddings'
             }
         },
-        search: {
-            embeddingTopk: 10,
-            useCodeModel: true,
-            codeModel: "Xenova/codegen-350M-mono",
-            codeMaxTokens: 328,
-            textModel: "google-bert/bert-base-uncased",
-            textMaxTokens: 4000,
-            baseCodeQuestion: ""
+        llm: {
+            provider: "google",
+            embeddingTopk: 20,
+            modelName: "gemini-1.5-pro",
+            textMaxTokens: 2048,
+            apiKey: process.env.GOOGLE_API_KEY,
+            language: 'pt-br'
         }
     }
 };
