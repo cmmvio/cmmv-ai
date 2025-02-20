@@ -193,16 +193,6 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 | Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 101k        | 384                      |
 | Supabase/all-MiniLM-L6-v2                    | 99.7k        | 384                      |
 
-# Common Code Models
-
-| Model Name                                   | Tokens   |                                      
-|----------------------------------------------|------------|
-| Xenova/codegen-350M-mono                       | 350M       |
-| Xenova/deepseek-coder-1.3b-instruct                      | 1.3B       |
-| Xenova/deepseek-coder-1.3b-base                     | 1.3B       |
-| Xenova/WizardCoder-1B-V1.0                     | 1B       |
-| Xenova/codegen-350M-multi                     | 350M       |
-
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 
 ## 🧠 Tokenization - Extracting Code for RAG 
