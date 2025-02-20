@@ -19,23 +19,9 @@ class SearchSample {
     const returnLanguage = 'pt-br';
     const question = 'como criar um controller do cmmv ?';
 
-    //Embedding
-    const embedder = await Embedding.loadEmbedder();
-    await embedder.initialize();
-
-    //Dataset
-    const dataset = new Dataset();
-    await dataset.initialize(embedder);
-    await dataset.load();
-
-    //LLM
-    const llm = await Chat.loadLLM();
-
     //Search
-    const search = new Search(dataset);
+    const search = new Search();
     await search.initialize();
-    const vectorStoreResult = await search.find(question);
-    const context = search.formatVectorStoreResults(vectorStoreResult);
 
     const prompt = `
     # Instructions
@@ -48,7 +34,7 @@ class SearchSample {
     - The return must be in pure JSON format without markdown
 
     ## Context
-    ${context}
+    {context}
 
     ## Chat history
     {chat_history}
@@ -58,10 +44,7 @@ class SearchSample {
 
     ### Answer:`;
 
-    const finalResult = await llm.invoke(
-      ['system', prompt],
-      ['human', question],
-    );
+    const finalResult = await search.invoke(question, prompt);
     console.log(`LLM Response: `, finalResult.content);
   }
 }

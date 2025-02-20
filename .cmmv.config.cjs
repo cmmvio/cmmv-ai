@@ -24,6 +24,7 @@ module.exports = {
                 //'../cmmv-*/src/*.ts',
                 //'../cmmv-*/src/**/*.ts',
                 //'../cmmv-*/packages/**/*.ts',
+                '../cmmv-*/**/*.md',
                 '../cmmv-docs/docs/en/**/*.md'
             ],
             output: "./samples/data.bin",
@@ -50,7 +51,7 @@ module.exports = {
         },
         llm: {
             provider: "google",
-            embeddingTopk: 20,
+            embeddingTopk: 10,
             modelName: "gemini-1.5-pro",
             textMaxTokens: 2048,
             apiKey: process.env.GOOGLE_API_KEY,
