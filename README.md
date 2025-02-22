@@ -39,45 +39,97 @@ module.exports = {
             allowRemoteModels: true
         },
         tokenizer: {
+            provider: "huggingface",
+            model: "sentence-transformers/distilbert-base-nli-mean-tokens",
+            indexSize: 768,
+            useKeyBERT: false,
+            chunkSize: 1000,
+            chunkOverlap: 0,
             patterns: [
-                '../cmmv-*/**/*.ts',
-                '../cmmv-*/src/*.ts',
-                '../cmmv-*/src/**/*.ts',
-                '../cmmv-*/packages/**/*.ts'
+                //'../cmmv/**/*.ts',
+                //'../cmmv/src/**/*.ts',
+                //'../cmmv/packages/**/*.ts',
+                //'../cmmv-*/**/*.ts',
+                //'../cmmv-*/src/*.ts',
+                //'../cmmv-*/src/**/*.ts',
+                //'../cmmv-*/packages/**/*.ts',
+                '../cmmv-*/**/*.md',
+                '../cmmv-docs/docs/en/**/*.md'
             ],
-            indexSize: 1024,
-            useKeyBERT: true, // Set to false to use TF-IDF instead
-            embeddingModel: "Xenova/all-MiniLM-L6-v2",
-            output: "./data.bin",
+            output: "./samples/data.bin",
             ignore: [
                 "node_modules", "*.d.ts", "*.cjs",
-                "*.spec.ts", "*.test.ts"
+                "*.spec.ts", "*.test.ts", "/tools/gulp/"
             ],
             exclude: [
                 "cmmv-formbuilder", "cmmv-ui",
                 "cmmv-language-tools", "cmmv-vue",
-                "cmmv-reactivity"
+                "cmmv-reactivity", "cmmv-vite-plugin",
+                "eslint.config.ts", "vitest.config.ts",
+                "auto-imports.d.ts", ".d.ts", ".cjs",
+                ".spec.ts", ".test.ts", "/tools/gulp/",
+                "node_modules"
             ]
         },
         vector: {
-            provider: "qdrant", // Available: "qdrant", "milvus", "neo4j"
-            qdrant: { url: "http://localhost:6333", collection: "embeddings" },
-            milvus: { url: "localhost:19530" },
-            neo4j: { url: "bolt://localhost:7687", user: "neo4j", password: "password" }
+            provider: "neo4j",
+            qdrant: {
+                url: 'http://localhost:6333',
+                collection: 'embeddings'
+            },
+            neo4j: {
+                url: "bolt://localhost:7687",
+                username: process.env.NEO4J_USERNAME,
+                password: process.env.NEO4J_PASSWORD,
+                indexName: "vector",
+                keywordIndexName: "keyword",
+                nodeLabel: "Chunk",
+                embeddingNodeProperty: "embedding"
+            }
+        },
+        llm: {
+            provider: "google",
+            embeddingTopk: 10,
+            model: "gemini-1.5-pro",
+            textMaxTokens: 2048,
+            apiKey: process.env.GOOGLE_API_KEY,
+            language: 'pt-br'
         }
     }
 };
 ```
 
-| Config Option           | Description |
-|-------------------------|------------|
-| `huggingface.token`     | API token for Hugging Face models. |
-| `tokenizer.indexSize`    | Embedding Dimenions. |
-| `tokenizer.patterns`    | File search patterns for tokenization. |
-| `tokenizer.embeddingModel` | Default embedding model (`WhereIsAI/UAE-Large-V1`, `mixedbread-ai/mxbai-embed-large-v1`, etc.). |
-| `tokenizer.output`      | Path to save the binary dataset. |
-| `tokenizer.ignore`      | List of ignored files/extensions. |
-| `tokenizer.exclude`     | List of excluded submodules. |
+| **Path**                                      | **Description**                                      | **Default Value / Example**                         |
+|-----------------------------------------------|--------------------------------------------------|------------------------------------------------|
+| `ai.huggingface.token`                        | API token for Hugging Face Hub                   | `process.env.HUGGINGFACE_HUB_TOKEN`            |
+| `ai.huggingface.localModelPath`               | Path for local models                            | `./models`                                     |
+| `ai.huggingface.allowRemoteModels`            | Allow downloading models from Hugging Face Hub  | `true`                                         |
+| `ai.tokenizer.provider`                       | Tokenizer provider                              | `"huggingface"`                                |
+| `ai.tokenizer.model`                          | Tokenizer model                                 | `"sentence-transformers/distilbert-base-nli-mean-tokens"` |
+| `ai.tokenizer.indexSize`                      | Token embedding index size                      | `768`                                          |
+| `ai.tokenizer.useKeyBERT`                     | Enable KeyBERT for keyword extraction          | `false`                                        |
+| `ai.tokenizer.chunkSize`                      | Size of text chunks for processing             | `1000`                                         |
+| `ai.tokenizer.chunkOverlap`                   | Overlap size between text chunks               | `0`                                            |
+| `ai.tokenizer.patterns`                       | File patterns to scan for tokenization         | `['../cmmv-*/**/*.md', '../cmmv-docs/docs/en/**/*.md']` |
+| `ai.tokenizer.output`                         | Output file for tokenized data                 | `"./samples/data.bin"`                         |
+| `ai.tokenizer.ignore`                         | File patterns to ignore                        | `["node_modules", "*.d.ts", "*.cjs", "*.spec.ts", "*.test.ts", "/tools/gulp/"]` |
+| `ai.tokenizer.exclude`                        | Files and directories to exclude               | `["cmmv-formbuilder", "cmmv-ui", "cmmv-language-tools", "cmmv-vue", "cmmv-reactivity", "cmmv-vite-plugin", "eslint.config.ts", "vitest.config.ts", "auto-imports.d.ts", ".d.ts", ".cjs", ".spec.ts", ".test.ts", "/tools/gulp/", "node_modules"]` |
+| `ai.vector.provider`                          | Provider for vector storage                    | `"neo4j"`                                      |
+| `ai.vector.qdrant.url`                        | Qdrant service URL                             | `"http://localhost:6333"`                      |
+| `ai.vector.qdrant.collection`                 | Collection name for Qdrant                     | `"embeddings"`                                 |
+| `ai.vector.neo4j.url`                         | Neo4j database URL                             | `"bolt://localhost:7687"`                      |
+| `ai.vector.neo4j.username`                    | Neo4j username                                 | `process.env.NEO4J_USERNAME`                   |
+| `ai.vector.neo4j.password`                    | Neo4j password                                 | `process.env.NEO4J_PASSWORD`                   |
+| `ai.vector.neo4j.indexName`                   | Index name for vector storage                  | `"vector"`                                     |
+| `ai.vector.neo4j.keywordIndexName`            | Index name for keyword search                  | `"keyword"`                                    |
+| `ai.vector.neo4j.nodeLabel`                   | Label for vectorized nodes                     | `"Chunk"`                                      |
+| `ai.vector.neo4j.embeddingNodeProperty`       | Property storing vector embeddings             | `"embedding"`                                  |
+| `ai.llm.provider`                             | LLM provider                                  | `"google"`                                     |
+| `ai.llm.embeddingTopk`                        | Number of top-k results for embeddings        | `10`                                           |
+| `ai.llm.model`                                | LLM model name                                | `"gemini-1.5-pro"`                             |
+| `ai.llm.textMaxTokens`                        | Maximum tokens per request                    | `2048`                                         |
+| `ai.llm.apiKey`                               | API key for the LLM provider                  | `process.env.GOOGLE_API_KEY`                   |
+| `ai.llm.language`                             | Default language                              | `"pt-br"`                                      |
 
 ## Download Models
 
@@ -149,13 +201,20 @@ huggingface: {
     localModelPath: './models',
     allowRemoteModels: false
 },
-search: {
+tokenizer: {
+    provider: "huggingface",
+    model: "sentence-transformers/distilbert-base-nli-mean-tokens",
+    indexSize: 768,
+    chunkSize: 1000,
+    chunkOverlap: 0,
+},
+llm: {
+    provider: "google",
     embeddingTopk: 10,
-    codeModel: "./models/CodeLlama-7B",
-    codeMaxTokens: 512,
-    textModel: "google-bert/bert-base-uncased",
-    textMaxTokens: 4000,
-    baseCodeQuestion: ""
+    model: "gemini-1.5-pro",
+    textMaxTokens: 2048,
+    apiKey: process.env.GOOGLE_API_KEY,
+    language: 'pt-br'
 }
 ```
 
@@ -181,17 +240,18 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 
 ## Common Embedding Models
 
-| Model Name                                   | Downloads   | Embedding Dimenions   |
-|----------------------------------------------|------------|--------------------------|
-| WhereIsAI/UAE-Large-V1                       | 3.07m        | 1024                      |
-| mixedbread-ai/mxbai-embed-large-v1           | 1.06m        | 1024                      |
-| sentence-transformers/distilbert-base-nli-mean-tokens                      | 674k        | 768                      |
-| Xenova/bge-base-en-v1.5                      | 910k        | 768                      |
-| Supabase/gte-small                           | 453k        | 384                      |
-| Xenova/all-MiniLM-L6-v2                      | 226k        | 384                      |
-| Xenova/all-mpnet-base-v2                     | 124k        | 768                      |
-| Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 101k        | 384                      |
-| Supabase/all-MiniLM-L6-v2                    | 99.7k        | 384                      |
+| **Embedding**   | **Default Model**                     | **Requires API Key** |
+|----------------|-------------------------------------|---------------------|
+| Cohere        | embed-english-v3.0                 | No                  |
+| DeepInfra     | -                                   | Yes                 |
+| Doubao        | -                                   | Yes                 |
+| Fireworks     | nomic-ai/nomic-embed-text-v1.5     | Yes                 |
+| HuggingFace   | Xenova/all-MiniLM-L6-v2            | No                  |
+| LlamaCpp      | (requires local model file)      | No                  |
+| OpenAI        | text-embedding-3-large             | Yes                 |
+| Pinecone      | multilingual-e5-large              | No                  |
+| Tongyi        | -                                   | Yes                 |
+| Watsonx       | -                                   | Yes                 |
 
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 
@@ -212,20 +272,18 @@ The **Tokenizer** class scans directories, extracts tokens, and generates vector
 ### 📌 **Example Usage:**
 ```typescript
 import { Application, Hook, HooksType } from '@cmmv/core';
-import { AIModule } from '@cmmv/ai';
 
 class TokenizerSample {
-  @Hook(HooksType.onInitialize)
-  async start() {
-    const { Tokenizer } = await import('./tokenizer.provider');
-    const tokenizer = new Tokenizer();
-    tokenizer.start();
-  }
+    @Hook(HooksType.onInitialize)
+    async start() {
+        const { Tokenizer } = await import('@cmmv/ai');
+        const tokenizer = new Tokenizer();
+        tokenizer.start();
+    }
 }
 
 Application.exec({
-  modules: [AIModule],
-  services: [TokenizerSample],
+    services: [TokenizerSample],
 });
 ```
 
@@ -318,23 +376,3 @@ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/da
 ```
 - Runs **Neo4j** on ports `7474` (HTTP) and `7687` (Bolt).
 - Data is stored persistently in `$HOME/neo4j/data`.
-
-## 🔥 Future Integration - Using LLMs with RAG 
-
-The next step is integrating **pre-trained models** for **code understanding and generation** using the tokenized dataset.
-
-## 📖 **Roadmap**
-- [x] Tokenization of **functions, classes, interfaces, decorators**.
-- [x] **FAISS-based vector search** for in-memory retrieval.
-- [x] Integration with KeyBert for keyword generation.
-- [ ] Externalize HTTP server for communication with APIs
-- [ ] Integration with **Qdrant, Milvus, Neo4j**.
-- [ ] Using **DeepSeek Code** for **LLM-powered code generation**.
-- [ ] Integrate external LLM APIs like ChatGPT, Gemini, etc.
-
-## 📚 **References**
-- **Transformers.js** [Transformers Documentation](https://github.com/huggingface/transformers)
-- **Qdrant:** [Qdrant Documentation](https://qdrant.tech/documentation/)  
-- **Milvus:** [Milvus Documentation](https://milvus.io/docs/)  
-- **Neo4j:** [Neo4j Documentation](https://neo4j.com/developer/)  
-- **KeyBert** [KeyBert Documentation](https://github.com/MaartenGr/KeyBERT)

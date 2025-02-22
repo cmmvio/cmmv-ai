@@ -8,9 +8,9 @@ export class HuggingFaceLLM extends AbstractLLM {
         const { HuggingFaceInference } = await import(
             '@langchain/community/llms/hf'
         );
-        const model = Config.get('ai.llm.modelName', 'gpt2');
+        const model = Config.get('ai.llm.model', 'gpt2');
         const apiKey = Config.get('ai.llm.apiKey');
         this.llm = new HuggingFaceInference({ apiKey, model });
-        this.logger.verbose(`Start Model: ${model}`);
+        this.logger.verbose(`Start LLM: HuggingFaceLLM (${model})`);
     }
 }

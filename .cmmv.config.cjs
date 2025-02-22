@@ -61,7 +61,7 @@ module.exports = {
         llm: {
             provider: "google",
             embeddingTopk: 10,
-            modelName: "gemini-1.5-pro",
+            model: "gemini-1.5-pro",
             textMaxTokens: 2048,
             apiKey: process.env.GOOGLE_API_KEY,
             language: 'pt-br'
