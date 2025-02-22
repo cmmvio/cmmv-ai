@@ -380,12 +380,12 @@ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/da
 
 The @cmmv/ai module includes support for multiple LLMs (Large Language Models), allowing flexible integration with different providers. Currently, the following models are supported:
 
-✅ DeepSeek – Optimized for programming and technical research.
-✅ Gemini (Google) – A multimodal LLM with advanced reasoning capabilities.
-✅ Hugging Face – Compatible with open-source models such as CodeLlama, MiniLM, DeepSeek, and more.
-✅ OpenAI – Integration with models like GPT-4 and GPT-3.5.
-✅ Ollama – Local model execution for privacy-focused applications.
-✅ Groq – High-speed inference with LLama-3, Mixtral, and Gemma models.
+* ✅ DeepSeek – Optimized for programming and technical research.
+* ✅ Gemini (Google) – A multimodal LLM with advanced reasoning capabilities.
+* ✅ Hugging Face – Compatible with open-source models such as CodeLlama, MiniLM, DeepSeek, and more.
+* ✅ OpenAI – Integration with models like GPT-4 and GPT-3.5.
+* ✅ Ollama – Local model execution for privacy-focused applications.
+* ✅ Groq – High-speed inference with LLama-3, Mixtral, and Gemma models.
 
 | **LLM Provider**  | **Default Model**                      | **Requires API Key** |
 |-------------------|--------------------------------------|---------------------|
