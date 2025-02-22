@@ -7,8 +7,9 @@ export * from './tokenizer.provider';
 export * from './search.provider';
 
 export * from './embeddings';
-export * from './vectorstores';
+export * from './llms';
 export * from './utils';
+export * from './vectorstores';
 
 //Module
 import { AIConfig } from './ai.config';
@@ -17,6 +18,6 @@ import { Dataset } from './dataset.provider';
 import { Search } from './search.provider';
 
 export const AIModule = new Module('ai', {
-  configs: [AIConfig],
-  providers: [Tokenizer, Dataset, Search],
+    configs: [AIConfig],
+    providers: [Tokenizer, Dataset, Search],
 });
