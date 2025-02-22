@@ -247,11 +247,14 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 | Doubao        | -                                   | Yes                 |
 | Fireworks     | nomic-ai/nomic-embed-text-v1.5     | Yes                 |
 | HuggingFace   | Xenova/all-MiniLM-L6-v2            | No                  |
-| LlamaCpp      | (requires local model file)      | No                  |
+| LlamaCpp      | - (requires local model file)      | No                  |
 | OpenAI        | text-embedding-3-large             | Yes                 |
 | Pinecone      | multilingual-e5-large              | No                  |
 | Tongyi        | -                                   | Yes                 |
 | Watsonx       | -                                   | Yes                 |
+| Jina          | jina-clip-v2                        | Yes                 |
+| MiniMax       | embo-01                            | No                  |
+| Premai        | -                                   | No                  |
 
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 
