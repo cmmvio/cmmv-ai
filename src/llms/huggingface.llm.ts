@@ -10,7 +10,8 @@ export class HuggingFaceLLM extends AbstractLLM {
         );
         const model = Config.get('ai.llm.model', 'gpt2');
         const apiKey = Config.get('ai.llm.apiKey');
-        this.llm = new HuggingFaceInference({ apiKey, model });
+        const options = Config.get('ai.llm', {});
+        this.llm = new HuggingFaceInference({ apiKey, model, ...options });
         this.logger.verbose(`Start LLM: HuggingFaceLLM (${model})`);
     }
 }

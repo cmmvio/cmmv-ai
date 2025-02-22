@@ -1,10 +1,10 @@
 import { Logger } from '@cmmv/core';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { type BaseLanguageModelInput } from '@langchain/core/language_models/base';
-import { LLM } from '@langchain/core/language_models/llms';
+import { LLM, BaseLLM } from '@langchain/core/language_models/llms';
 
 export abstract class AbstractLLM {
-    protected llm: BaseChatModel | LLM;
+    protected llm: BaseChatModel | LLM | BaseLLM;
     protected logger: Logger;
 
     public initialize() {}

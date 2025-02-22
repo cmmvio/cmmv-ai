@@ -14,11 +14,13 @@ export class GoogleLLM extends AbstractLLM {
             2048,
         );
         const apiKey = Config.get('ai.llm.apiKey');
+        const options = Config.get('ai.llm', {});
 
         this.llm = new ChatGoogleGenerativeAI({
             modelName: model,
             apiKey,
             maxOutputTokens,
+            ...options,
         });
 
         this.logger.verbose(`Start LLM: GoogleLLM (${model})`);
