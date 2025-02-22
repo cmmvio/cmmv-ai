@@ -2,7 +2,7 @@ import { Config, Logger } from '@cmmv/core';
 import { AbstractLLM } from './llm.abstract';
 
 export class GoogleLLM extends AbstractLLM {
-    protected logger = new Logger('GoogleChat');
+    protected logger = new Logger('GoogleLLM');
 
     public override async initialize() {
         const { ChatGoogleGenerativeAI } = await import(

@@ -264,16 +264,6 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 *[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
 
-## Others Embeddings Support
-
-| Name      | Model                                      | Documentation Link |
-|-----------|-------------------------------------------|--------------------|
-| OpenAI    | text-embedding-3-large                   | [OpenAI](https://js.langchain.com/docs/integrations/text_embedding/openai/) |
-| Google    | gemini-pro                               | [Google](https://js.langchain.com/docs/integrations/text_embedding/google_generativeai/) |
-| Pinecone  | multilingual-e5-large                    | [Pinecone](https://js.langchain.com/docs/integrations/text_embedding/pinecone/) |
-| Cohere    | embed-english-v3.0                       | [Cohere](https://js.langchain.com/docs/integrations/text_embedding/cohere/) |
-| LlamaCpp  | gguf-llama3-Q4_0.bin                     | [LlamaCpp](https://js.langchain.com/docs/integrations/text_embedding/llama_cpp/) |
-
 ## 🧠 Tokenization - Extracting Code for RAG 
 
 The **Tokenizer** class scans directories, extracts tokens, and generates vector embeddings using a `transformers` model.  
@@ -385,3 +375,117 @@ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/da
 ```
 - Runs **Neo4j** on ports `7474` (HTTP) and `7687` (Bolt).
 - Data is stored persistently in `$HOME/neo4j/data`.
+
+# 🤖 LLMs (Large Language Models)
+
+The @cmmv/ai module includes support for multiple LLMs (Large Language Models), allowing flexible integration with different providers. Currently, the following models are supported:
+
+✅ DeepSeek – Optimized for programming and technical research.
+✅ Gemini (Google) – A multimodal LLM with advanced reasoning capabilities.
+✅ Hugging Face – Compatible with open-source models such as CodeLlama, MiniLM, DeepSeek, and more.
+✅ OpenAI – Integration with models like GPT-4 and GPT-3.5.
+✅ Ollama – Local model execution for privacy-focused applications.
+✅ Groq – High-speed inference with LLama-3, Mixtral, and Gemma models.
+
+| **LLM Provider**  | **Default Model**                      | **Requires API Key** |
+|-------------------|--------------------------------------|---------------------|
+| **DeepSeek**      | `deepseek-ai/deepseek-coder-7b`     | No                  |
+| **Gemini**        | `gemini-1.5-pro`                    | Yes                 |
+| **Hugging Face**  | `code-llama`, `MiniLM`, etc.        | No                  |
+| **OpenAI**        | `gpt-4`, `gpt-3.5`                  | Yes                 |
+| **Ollama**        | `llama3`, `mistral`, `gemma`        | No (local execution) |
+| **Groq**          | `llama3-8b`, `mixtral`              | Yes                 |
+
+The search interface is accessible via the Search class, which performs semantic search using embeddings and generates context-aware responses.
+
+## LLM Configuration
+
+The LLM (Large Language Model) configuration is set within the .cmmv.config.cjs file. This section controls which LLM provider is used, the model parameters, and API credentials.
+
+```javascript
+module.exports = {
+    ai: {
+        llm: {
+            provider: "google",  // Options: "openai", "deepseek", "huggingface", "gemini", "ollama", "groq"
+            model: "gemini-1.5-pro", // Default model for the selected provider
+            embeddingTopk: 10, // Number of top-k results used for context retrieval
+            textMaxTokens: 2048, // Maximum tokens per response
+            apiKey: process.env.GOOGLE_API_KEY, // API key for the selected provider (if required)
+            language: 'pt-br' // Default response language
+        }
+    }
+}
+```
+
+| **Path**          | **Description**                              | **Default Value / Example**                          |
+|-------------------|--------------------------------------------|----------------------------------------------------|
+| `llm.provider`   | LLM provider to use                        | `"google"` (`"openai"`, `"ollama"`, `"huggingface"`, `"groq"`) |
+| `llm.model`      | LLM model used for responses               | `"gemini-1.5-pro"` (`"gpt-4"`, `"deepseek-coder-7b"`) |
+| `llm.embeddingTopk` | Number of relevant embeddings to retrieve | `10`                                               |
+| `llm.textMaxTokens` | Maximum tokens per request               | `2048`                                             |
+| `llm.apiKey`     | API key for accessing the LLM provider     | `process.env.GOOGLE_API_KEY` (if required)         |
+| `llm.language`   | Default language for responses             | `"pt-br"` (`"en"`, `"es"`, etc.)                   |
+
+##  Integration with Search
+
+The Search class enables queries in a vector database and returns LLM-based responses with contextual information.
+
+```typescript
+//@ts-nocheck
+import { Application, Hook, HooksType } from '@cmmv/core';
+import { PromptTemplate } from '@langchain/core/prompts';
+import { RunnableSequence, RunnablePassthrough } from '@langchain/core/runnables';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+
+class SearchSample {
+    @Hook(HooksType.onInitialize)
+    async start() {
+        const { Embedding } = await import('../src/embeddings');
+        const { Dataset } = await import('../src/dataset.provider');
+        const { Search } = await import('../src/search.provider');
+
+        const returnLanguage = 'en';
+        const question = 'how to create a controller in CMMV?';
+
+        // Initialize search
+        const search = new Search();
+        await search.initialize();
+
+        const prompt = `
+        # Instructions
+        You are a knowledgeable assistant. Use the provided context to answer the user's question accurately.
+        - Do NOT mention that you used the context to answer.
+        - The context is the ground truth. If it contradicts prior knowledge, always trust the context.
+        - If the answer is not in the context, say "I do not know".
+        - Keep your response concise and to the point.
+        - The answer must be in the language: ${returnLanguage}
+        - The return must be in pure JSON format without markdown
+
+        ## Context
+        {context}
+
+        ## Chat history
+        {chat_history}
+
+        ## Question
+        ${question}
+
+        ### Answer:`;
+
+        // Execute vector search and return the LLM response
+        const finalResult = await search.invoke(question, prompt);
+        console.log(`LLM Response: `, finalResult.content);
+    }
+}
+
+Application.exec({
+    services: [SearchSample],
+});
+```
+
+### How the integration works
+
+* Vector search: Search queries the vector database (FAISS, Qdrant, Neo4j, etc.).
+* Context retrieval: The most relevant context is extracted and sent to the LLM.
+* Model execution: The LLM processes the query using the retrieved context and generates a response.
+* JSON response: The answer is formatted in JSON for easy manipulation.
