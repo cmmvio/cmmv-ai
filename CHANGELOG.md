@@ -1,3 +1,19 @@
+## [0.0.5](https://github.com/cmmvio/cmmv-ai/compare/v0.0.4...v0.0.5) (2025-02-22)
+
+
+### Bug Fixes
+
+* models table ([af96d93](https://github.com/cmmvio/cmmv-ai/commit/af96d93cce6ea94728d80bc8693a8a5dd65d6d63))
+* search ([79409ae](https://github.com/cmmvio/cmmv-ai/commit/79409ae5db1a032c577b91db3577e01755962b44))
+
+
+### Features
+
+* license, code of conduct ([8454736](https://github.com/cmmvio/cmmv-ai/commit/845473619eff335e932dbc9d1872b86a6b1005a2))
+* search with gemini ([07384c1](https://github.com/cmmvio/cmmv-ai/commit/07384c19ee50003266a738f8cb53dcf6fa87d7c7))
+
+
+
 ## [0.0.4](https://github.com/cmmvio/cmmv-ai/compare/v0.0.3...v0.0.4) (2025-02-20)
 
 

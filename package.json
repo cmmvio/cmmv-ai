@@ -1,6 +1,6 @@
 {
     "name": "@cmmv/ai",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "CMMV module for LLM integration, tokenization, RAG dataset creation, and fast FAISS-based vector search for code indexing.",
     "author": "Andre Ferreira",
     "keywords": [
