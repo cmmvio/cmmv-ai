@@ -7,6 +7,11 @@ export class LLM {
         const provider = Config.get<string>('ai.llm.provider', 'faiss');
 
         switch (provider) {
+            case 'anthropic':
+                const { AnthropicLLM } = await import('./anthropic.llm');
+                const anthropicLLM = new AnthropicLLM();
+                await anthropicLLM.initialize();
+                return anthropicLLM;
             case 'deepseek':
                 const { DeepSeekLLM } = await import('./deepseek.llm');
                 const deepSeekLLM = new DeepSeekLLM();

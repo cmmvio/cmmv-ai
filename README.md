@@ -395,6 +395,7 @@ The @cmmv/ai module includes support for multiple LLMs (Large Language Models), 
 | **OpenAI**        | `gpt-4`, `gpt-3.5`                  | Yes                 |
 | **Ollama**        | `llama3`, `mistral`, `gemma`        | No (local execution) |
 | **Groq**          | `llama3-8b`, `mixtral`              | Yes                 |
+| **Anthropic**     | `claude-3-haiku-20240307`           | Yes                 |
 
 The search interface is accessible via the Search class, which performs semantic search using embeddings and generates context-aware responses.
 
