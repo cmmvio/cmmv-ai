@@ -29,6 +29,12 @@ export class Embedding {
                     './huggingface.embedding'
                 );
                 return new HuggingFaceEmbedding();
+            case 'tencent':
+            case 'hunyuan':
+                const { HunyuanEmbedding } = await import(
+                    './hunyuan.embedding'
+                );
+                return new HunyuanEmbedding();
             case 'jina':
                 const { JinaEmbedding } = await import('./jina.embedding');
                 return new JinaEmbedding();
@@ -55,10 +61,23 @@ export class Embedding {
             case 'premai':
                 const { PremaiEmbedding } = await import('./premai.embedding');
                 return new PremaiEmbedding();
+            case 'tensorflow':
+                const { TensorFlowEmbedding } = await import(
+                    './tensorflow.embedding'
+                );
+                return new TensorFlowEmbedding();
+            case 'togetherai':
+                const { TogetherAIEmbedding } = await import(
+                    './togetherai.embedding'
+                );
+                return new TogetherAIEmbedding();
             case 'tongyi':
             case 'alibaba':
                 const { TongyiEmbedding } = await import('./tongyi.embedding');
                 return new TongyiEmbedding();
+            case 'voyage':
+                const { VoyageEmbedding } = await import('./voyage.embedding');
+                return new VoyageEmbedding();
             case 'watsonx':
             case 'idm':
                 const { WatsonxEmbedding } = await import(

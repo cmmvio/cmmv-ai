@@ -240,23 +240,29 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 
 ## Common Embedding Models
 
-| **Embedding**   | **Default Model**                     | **Requires API Key** |
-|----------------|-------------------------------------|---------------------|
-| Cohere        | embed-english-v3.0                 | No                  |
-| DeepInfra     | -                                   | Yes                 |
-| Doubao        | -                                   | Yes                 |
-| Fireworks     | nomic-ai/nomic-embed-text-v1.5     | Yes                 |
-| HuggingFace   | Xenova/all-MiniLM-L6-v2            | No                  |
-| LlamaCpp      | - (requires local model file)      | No                  |
-| OpenAI        | text-embedding-3-large             | Yes                 |
-| Pinecone      | multilingual-e5-large              | No                  |
-| Tongyi        | -                                   | Yes                 |
-| Watsonx       | -                                   | Yes                 |
-| Jina          | jina-clip-v2                        | Yes                 |
-| MiniMax       | embo-01                            | No                  |
-| Premai        | -                                   | No                  |
+| **Embedding**   | **Default Model**                         | **Requires API Key** |
+|----------------|-----------------------------------------|---------------------|
+| Cohere        | embed-english-v3.0                     | No                  |
+| DeepInfra     | -                                       | Yes                 |
+| Doubao        | -                                       | Yes                 |
+| Fireworks     | nomic-ai/nomic-embed-text-v1.5         | Yes                 |
+| HuggingFace   | Xenova/all-MiniLM-L6-v2                | No                  |
+| LlamaCpp      | - (requires local model file)          | No                  |
+| OpenAI        | text-embedding-3-large                 | Yes                 |
+| Pinecone      | multilingual-e5-large                  | No                  |
+| Tongyi        | -                                       | Yes                 |
+| Watsonx       | -                                       | Yes                 |
+| Jina          | jina-clip-v2                            | Yes                 |
+| MiniMax       | embo-01                                | No                  |
+| Premai        | -                                       | No                  |
+| Hunyuan       | -                                       | Yes                 |
+| TensorFlow    | -                                       | No                  |
+| TogetherAI    | togethercomputer/m2-bert-80M-8k-retrieval | Yes                 |
+| Voyage        | voyage-01                               | Yes                 |
+
 
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
+*[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
 
 ## Others Embeddings Support
 

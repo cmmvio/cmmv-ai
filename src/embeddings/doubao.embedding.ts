@@ -11,6 +11,6 @@ export class DoubaoEmbedding extends AbstractEmbedding {
         const model = Config.get('ai.tokenizer.model');
         const apiKey = Config.get('ai.tokenizer.apiKey');
         this.embedder = new ByteDanceDoubaoEmbeddings({ apiKey, model });
-        this.logger.verbose(`Start Embedding: ByteDanceDoubaoEmbeddings`);
+        this.logger.verbose(`Start Embedding: DoubaoEmbedding`);
     }
 }
