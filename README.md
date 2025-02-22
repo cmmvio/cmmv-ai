@@ -383,21 +383,32 @@ The @cmmv/ai module includes support for multiple LLMs (Large Language Models), 
 * ✅ DeepSeek – Optimized for programming and technical research.
 * ✅ Gemini (Google) – A multimodal LLM with advanced reasoning capabilities.
 * ✅ Hugging Face – Compatible with open-source models such as CodeLlama, MiniLM, DeepSeek, and more.
-* ✅ OpenAI – Integration with models like GPT-4 and GPT-3.5.
-* ✅ Ollama – Local model execution for privacy-focused applications.
-* ✅ Groq – High-speed inference with LLama-3, Mixtral, and Gemma models.
+* ✅ OpenAI (ChatGPT) – Integration with models like GPT-4 and GPT-3.5.
+* ✅ Ollama (Facebook) – Local model execution for privacy-focused applications.
+* ✅ Groq (X) – High-speed inference with LLama-3, Mixtral, and Gemma models.
 
 | **LLM Provider**  | **Default Model**                      | **Requires API Key** |
 |-------------------|--------------------------------------|---------------------|
-| **DeepSeek**      | `deepseek-ai/deepseek-coder-7b`     | No                  |
-| **Gemini**        | `gemini-1.5-pro`                    | Yes                 |
-| **Hugging Face**  | `code-llama`, `MiniLM`, etc.        | No                  |
-| **OpenAI**        | `gpt-4`, `gpt-3.5`                  | Yes                 |
-| **Ollama**        | `llama3`, `mistral`, `gemma`        | No (local execution) |
-| **Groq**          | `llama3-8b`, `mixtral`              | Yes                 |
+| **AI21 Labs**     | `j1-jumbo`, `j1-large`               | Yes                 |
+| **Aleph Alpha**   | `luminous-base`, `luminous-extended` | Yes                 |
 | **Anthropic**     | `claude-3-haiku-20240307`           | Yes                 |
+| **AWS Bedrock**   | Various models (Claude, Mistral, etc.) | Yes             |
+| **Cohere**        | `command-xlarge-nightly`, `command-medium` | Yes        |
+| **DeepInfra**     | Various models                      | Yes                 |
+| **DeepSeek**      | `deepseek-ai/deepseek-coder-7b`     | No                  |
+| **Fireworks**     | Various models                      | Yes                 |
+| **Google Vertex AI** | `text-bison@001`                   | Yes                 |
+| **Groq**          | `llama3-8b`, `mixtral`              | Yes                 |
+| **Hugging Face**  | `code-llama`, `MiniLM`, etc.        | No                  |
+| **Mistral AI**    | `mistral-7b`, `mixtral`             | Yes                 |
+| **Ollama**        | `llama3`, `mistral`, `gemma`        | No (local execution) |
+| **OpenAI**        | `gpt-4`, `gpt-3.5`                  | Yes                 |
+| **Together AI**   | `GPT-JT-6B-v1`                      | Yes                 |
+| **Vertex AI**     | `text-bison@001`                    | Yes                 |
 
 The search interface is accessible via the Search class, which performs semantic search using embeddings and generates context-aware responses.
+
+*[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
 
 ## LLM Configuration
 
