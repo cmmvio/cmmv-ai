@@ -242,6 +242,7 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 
 | **Embedding**   | **Default Model**                         | **Requires API Key** |
 |----------------|-----------------------------------------|---------------------|
+| Bedrock       | amazon.titan-embed-text-v1             | Yes                 |
 | Cohere        | embed-english-v3.0                     | No                  |
 | DeepInfra     | -                                       | Yes                 |
 | Doubao        | -                                       | Yes                 |
@@ -443,48 +444,49 @@ module.exports = {
 The Search class enables queries in a vector database and returns LLM-based responses with contextual information.
 
 ```typescript
-//@ts-nocheck
 import { Application, Hook, HooksType } from '@cmmv/core';
-import { PromptTemplate } from '@langchain/core/prompts';
-import { RunnableSequence, RunnablePassthrough } from '@langchain/core/runnables';
-import { StringOutputParser } from '@langchain/core/output_parsers';
+
+import {
+    PromptTemplate,
+    RunnableSequence,
+    RunnablePassthrough,
+    StringOutputParser,
+    Embedding,
+    Dataset,
+    Search
+} from '@cmmv/ai';
 
 class SearchSample {
     @Hook(HooksType.onInitialize)
     async start() {
-        const { Embedding } = await import('../src/embeddings');
-        const { Dataset } = await import('../src/dataset.provider');
-        const { Search } = await import('../src/search.provider');
+        const returnLanguage = 'pt-br';
+        const question = 'como criar um controller do cmmv ?';
 
-        const returnLanguage = 'en';
-        const question = 'how to create a controller in CMMV?';
-
-        // Initialize search
+        //Search
         const search = new Search();
         await search.initialize();
 
         const prompt = `
-        # Instructions
-        You are a knowledgeable assistant. Use the provided context to answer the user's question accurately.
-        - Do NOT mention that you used the context to answer.
-        - The context is the ground truth. If it contradicts prior knowledge, always trust the context.
-        - If the answer is not in the context, say "I do not know".
-        - Keep your response concise and to the point.
-        - The answer must be in the language: ${returnLanguage}
-        - The return must be in pure JSON format without markdown
+    # Instructions
+    You are a knowledgeable assistant. Use the provided context to answer the user's question accurately.
+    - Do NOT mention that you used the context to answer.
+    - The context is the ground truth. If it contradicts prior knowledge, always trust the context.
+    - If the answer is not in the context, say "I do not know".
+    - Keep your response concise and to the point.
+    - The answer must be in the language: ${returnLanguage}
+    - The return must be in pure JSON format without markdown
 
-        ## Context
-        {context}
+    ## Context
+    {context}
 
-        ## Chat history
-        {chat_history}
+    ## Chat history
+    {chat_history}
 
-        ## Question
-        ${question}
+    ## Question
+    ${question}
 
-        ### Answer:`;
+    ### Answer:`;
 
-        // Execute vector search and return the LLM response
         const finalResult = await search.invoke(question, prompt);
         console.log(`LLM Response: `, finalResult.content);
     }

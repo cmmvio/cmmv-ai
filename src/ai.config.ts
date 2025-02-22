@@ -2,6 +2,30 @@ import { ConfigSchema } from '@cmmv/core';
 
 export const AIConfig: ConfigSchema = {
     ai: {
+        aws: {
+            type: 'object',
+            required: false,
+            properties: {
+                region: {
+                    type: 'string',
+                    required: false,
+                },
+                credentials: {
+                    type: 'object',
+                    required: false,
+                    properties: {
+                        accessKeyId: {
+                            type: 'string',
+                            required: false,
+                        },
+                        secretAccessKey: {
+                            type: 'string',
+                            required: false,
+                        },
+                    },
+                },
+            },
+        },
         huggingface: {
             required: false,
             type: 'object',

@@ -7,6 +7,11 @@ export class Embedding {
         const provider = Config.get('ai.tokenizer.provider', 'huggingface');
 
         switch (provider) {
+            case 'bedrock':
+                const { BedrockEmbedding } = await import(
+                    './bedrock.embedding'
+                );
+                return new BedrockEmbedding();
             case 'cohere':
                 const { CohereEmbedding } = await import('./cohere.embedding');
                 return new CohereEmbedding();

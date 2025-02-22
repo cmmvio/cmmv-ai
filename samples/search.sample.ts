@@ -1,20 +1,19 @@
 //@ts-nocheck
 import { Application, Hook, HooksType } from '@cmmv/core';
-import { PromptTemplate } from '@langchain/core/prompts';
 
 import {
+    PromptTemplate,
     RunnableSequence,
     RunnablePassthrough,
-} from '@langchain/core/runnables';
-import { StringOutputParser } from '@langchain/core/output_parsers';
+    StringOutputParser,
+    Embedding,
+    Dataset,
+    Search,
+} from '../src/main';
 
 class SearchSample {
     @Hook(HooksType.onInitialize)
     async start() {
-        const { Embedding } = await import('../src/embeddings');
-        const { Dataset } = await import('../src/dataset.provider');
-        const { Search } = await import('../src/search.provider');
-
         const returnLanguage = 'pt-br';
         const question = 'como criar um controller do cmmv ?';
 

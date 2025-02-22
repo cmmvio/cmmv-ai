@@ -1,6 +1,7 @@
 export * from './embedding.abstract';
 export * from './embedding.provider';
 
+export * from './bedrock.embedding';
 export * from './cohere.embedding';
 export * from './deepinfra.embedding';
 export * from './doubao.embedding';
