@@ -43,10 +43,19 @@ module.exports = {
             ]
         },
         vector: {
-            provider: "qdrant",
+            provider: "neo4j",
             qdrant: {
                 url: 'http://localhost:6333',
                 collection: 'embeddings'
+            },
+            neo4j: {
+                url: "bolt://localhost:7687",
+                username: process.env.NEO4J_USERNAME,
+                password: process.env.NEO4J_PASSWORD,
+                indexName: "vector",
+                keywordIndexName: "keyword",
+                nodeLabel: "Chunk",
+                embeddingNodeProperty: "embedding"
             }
         },
         llm: {

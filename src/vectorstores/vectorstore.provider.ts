@@ -15,6 +15,11 @@ export class VectorStore {
         const qdrantVectorStore = new QdrantVectorStore();
         await qdrantVectorStore.initialize(embedder.getInterfaceEmbedder());
         return qdrantVectorStore;
+      case 'neo4j':
+        const { Neo4jVectorStore } = await import('./neo4j.vectorstore');
+        const neo4jVectorStore = new Neo4jVectorStore();
+        await neo4jVectorStore.initialize(embedder.getInterfaceEmbedder());
+        return neo4jVectorStore;
       default:
         return null;
     }
