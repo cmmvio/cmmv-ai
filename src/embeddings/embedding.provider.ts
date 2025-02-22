@@ -18,17 +18,25 @@ export class Embedding {
             case 'doubao':
                 const { DoubaoEmbedding } = await import('./doubao.embedding');
                 return new DoubaoEmbedding();
+            case 'fireworks':
+                const { FireworksEmbedding } = await import(
+                    './fireworks.embedding'
+                );
+                return new FireworksEmbedding();
             case 'huggingface':
+            case 'hf':
                 const { HuggingFaceEmbedding } = await import(
                     './huggingface.embedding'
                 );
                 return new HuggingFaceEmbedding();
             case 'llama':
+            case 'llamacpp':
                 const { LlamaCppEmbedding } = await import(
                     './llamacpp.embedding'
                 );
                 return new LlamaCppEmbedding();
             case 'openai':
+            case 'chatgpt':
                 const { OpenAIEmbedding } = await import('./openai.embedding');
                 return new OpenAIEmbedding();
             case 'pinecone':
@@ -37,8 +45,15 @@ export class Embedding {
                 );
                 return new PineconeEmbedding();
             case 'tongyi':
+            case 'alibaba':
                 const { TongyiEmbedding } = await import('./tongyi.embedding');
                 return new TongyiEmbedding();
+            case 'watsonx':
+            case 'idm':
+                const { WatsonxEmbedding } = await import(
+                    './watsonx.embedding'
+                );
+                return new WatsonxEmbedding();
         }
     }
 }
