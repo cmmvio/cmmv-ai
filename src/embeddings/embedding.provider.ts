@@ -84,6 +84,11 @@ export class Embedding {
                     './watsonx.embedding'
                 );
                 return new WatsonxEmbedding();
+            case 'zhipuai':
+                const { ZhipuAIEmbedding } = await import(
+                    './zhipuai.embedding'
+                );
+                return new ZhipuAIEmbedding();
         }
     }
 }

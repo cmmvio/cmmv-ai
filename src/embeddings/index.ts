@@ -18,3 +18,4 @@ export * from './togetherai.embedding';
 export * from './tongyi.embedding';
 export * from './voyage.embedding';
 export * from './watsonx.embedding';
+export * from './zhipuai.embedding';

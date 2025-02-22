@@ -259,7 +259,7 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 | TensorFlow    | -                                       | No                  |
 | TogetherAI    | togethercomputer/m2-bert-80M-8k-retrieval | Yes                 |
 | Voyage        | voyage-01                               | Yes                 |
-
+| ZhipuAI       | embedding-2                            | Yes                 |
 
 *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
 *[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
