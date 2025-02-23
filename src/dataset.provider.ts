@@ -1,6 +1,7 @@
-import { Service, Config, Logger } from '@cmmv/core';
 import * as fs from 'node:fs';
 import * as faiss from 'faiss-node';
+import { Service, Config, Logger } from '@cmmv/core';
+import type { VectorStoreRetriever } from '@langchain/core/vectorstores';
 
 import { AbstractEmbedding } from './embeddings';
 import { DatasetEntry } from './dataset.interface';
@@ -102,26 +103,47 @@ export class Dataset {
         }
     }
 
-    async search(queryVector: Float32Array, topK = 5): Promise<DatasetEntry[]> {
-        if (!(queryVector instanceof Float32Array)) {
+    async search(
+        queryVector: Float32Array | string,
+        topK = 5,
+    ): Promise<DatasetEntry[]> {
+        if (
+            !(queryVector instanceof Float32Array) &&
+            typeof queryVector !== 'string'
+        ) {
             throw new Error(
-                'Invalid query vector format, expected Float32Array.',
+                'Invalid query vector format, expected Float32Array or string.',
             );
         }
 
         this.logger.verbose(`Searching for top ${topK} matches`);
 
         if (this.adapter) {
+            const provider = Config.get<string>('ai.vector.provider', 'faiss');
             const dbResult = await this.adapter.searchVector(queryVector, topK);
-            return dbResult
-                .map((result) => {
-                    const registry = this.data.find(
-                        (item) => item.id === result.id,
-                    );
-                    return registry ? { ...registry } : null;
-                })
-                .filter((item) => item);
-        } else {
+
+            if (dbResult && dbResult[0].doc) {
+                return dbResult.map((result) => {
+                    return {
+                        content: result.doc.pageContent,
+                        metadata: result.doc.metadata,
+                        id: result.doc.id,
+                        score: result.score,
+                    } as DatasetEntry;
+                });
+            } else {
+                return provider === 'qrant' && dbResult && dbResult.length > 0
+                    ? dbResult
+                          .map((result) => {
+                              const registry = this.data.find(
+                                  (item) => item.id === result.id,
+                              );
+                              return registry ? { ...registry } : null;
+                          })
+                          .filter((item) => item)
+                    : dbResult;
+            }
+        } else if (queryVector instanceof Float32Array) {
             const queryArray = Array.from(queryVector);
             const result = this.indexFAISS.search(queryArray, topK);
 
@@ -131,5 +153,9 @@ export class Dataset {
                 return data;
             });
         }
+    }
+
+    asRetriever(): VectorStoreRetriever<any> {
+        return this.adapter ? this.adapter.asRetriever() : null;
     }
 }

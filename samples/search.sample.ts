@@ -14,35 +14,12 @@ import {
 class SearchSample {
     @Hook(HooksType.onInitialize)
     async start() {
-        const returnLanguage = 'pt-br';
         const question = 'como criar um controller do cmmv ?';
 
-        //Search
         const search = new Search();
         await search.initialize();
 
-        const prompt = `
-    # Instructions
-    You are a knowledgeable assistant. Use the provided context to answer the user's question accurately.
-    - Do NOT mention that you used the context to answer.
-    - The context is the ground truth. If it contradicts prior knowledge, always trust the context.
-    - If the answer is not in the context, say "I do not know".
-    - Keep your response concise and to the point.
-    - The answer must be in the language: ${returnLanguage}
-    - The return must be in pure JSON format without markdown
-
-    ## Context
-    {context}
-
-    ## Chat history
-    {chat_history}
-
-    ## Question
-    ${question}
-
-    ### Answer:`;
-
-        const finalResult = await search.invoke(question, prompt);
+        const finalResult = await search.invoke(question);
         console.log(`LLM Response: `, finalResult.content);
     }
 }

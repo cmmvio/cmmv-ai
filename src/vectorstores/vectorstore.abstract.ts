@@ -35,7 +35,7 @@ export abstract class VectorDatabaseAdapter {
         let result = [];
 
         for (const [doc, score] of similaritySearch)
-            result.push({ id: doc.id, score });
+            result.push({ doc, score });
 
         return result;
     }

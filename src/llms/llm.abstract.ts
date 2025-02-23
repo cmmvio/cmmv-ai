@@ -9,6 +9,10 @@ export abstract class AbstractLLM {
 
     public initialize() {}
 
+    public getLLM(): BaseChatModel | LLM | BaseLLM {
+        return this.llm;
+    }
+
     invoke(input: BaseLanguageModelInput, options?: any): Promise<any> {
         return this.llm.invoke(input, options);
     }

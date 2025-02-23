@@ -43,10 +43,13 @@ module.exports = {
             ]
         },
         vector: {
-            provider: "neo4j",
+            provider: "elastic",
             qdrant: {
                 url: 'http://localhost:6333',
                 collection: 'embeddings'
+            },
+            elastic: {
+                url: "http://127.0.0.1:9200",
             },
             neo4j: {
                 url: "bolt://localhost:7687",
@@ -60,7 +63,7 @@ module.exports = {
         },
         llm: {
             provider: "google",
-            embeddingTopk: 10,
+            embeddingTopk: 20,
             model: "gemini-1.5-pro",
             textMaxTokens: 2048,
             apiKey: process.env.GOOGLE_API_KEY,
