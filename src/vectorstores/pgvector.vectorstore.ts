@@ -6,8 +6,6 @@ export class PgVectorStore extends VectorDatabaseAdapter {
     protected logger = new Logger('PgVectorStore');
 
     async initialize(embeddings: EmbeddingsInterface) {
-        const {} = await import('pg');
-
         type DistanceStrategy = 'cosine' | 'innerProduct' | 'euclidean';
 
         const { PGVectorStore } = await import(

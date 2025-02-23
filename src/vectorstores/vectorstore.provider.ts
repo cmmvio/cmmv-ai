@@ -21,6 +21,15 @@ export class VectorStore {
                 );
                 return elasticSearchVectorStore;
             case 'neo4j':
+                const { MilvusVectorStore } = await import(
+                    './milvus.vectorstore'
+                );
+                const milvusVectorStore = new MilvusVectorStore();
+                await milvusVectorStore.initialize(
+                    embedder.getInterfaceEmbedder(),
+                );
+                return milvusVectorStore;
+            case 'neo4j':
                 const { Neo4jVectorStore } = await import(
                     './neo4j.vectorstore'
                 );
@@ -45,7 +54,6 @@ export class VectorStore {
                     embedder.getInterfaceEmbedder(),
                 );
                 return qdrantVectorStore;
-
             default:
                 return null;
         }
