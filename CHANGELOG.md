@@ -1,3 +1,12 @@
+## [0.0.7](https://github.com/cmmvio/cmmv-ai/compare/v0.0.6...v0.0.7) (2025-02-23)
+
+
+### Bug Fixes
+
+* eslint ([3952bc0](https://github.com/cmmvio/cmmv-ai/commit/3952bc0ce70d2d965616cf2c670bf18c4063d892))
+
+
+
 ## [0.0.6](https://github.com/cmmvio/cmmv-ai/compare/v0.0.5...v0.0.6) (2025-02-23)
 
 
