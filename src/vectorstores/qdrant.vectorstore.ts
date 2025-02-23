@@ -1,12 +1,11 @@
 import { Config, Logger } from '@cmmv/core';
 import { QdrantClient } from '@qdrant/js-client-rest';
-import type { VectorStoreRetriever } from '@langchain/core/vectorstores';
 import type { EmbeddingsInterface } from '@langchain/core/embeddings';
 import { VectorDatabaseAdapter } from './vectorstore.abstract';
 import { DatasetEntry } from '../dataset.interface';
 
 export class QdrantVectorStore extends VectorDatabaseAdapter {
-    private logger = new Logger('QdrantVectorStore');
+    protected logger = new Logger('QdrantVectorStore');
     private client: QdrantClient;
     private collection: string;
     private points: any[] = [];
@@ -72,7 +71,18 @@ export class QdrantVectorStore extends VectorDatabaseAdapter {
         }
     }
 
-    async saveVector(entry: DatasetEntry) {
+    private async sendToDatabase() {
+        if (this.points.length > 0) {
+            try {
+                await this.client.upsert(this.collection, {
+                    points: this.points,
+                });
+                this.points = [];
+            } catch {}
+        }
+    }
+
+    override async saveVector(entry: DatasetEntry) {
         try {
             this.points.push({
                 id: entry.id,
@@ -87,18 +97,10 @@ export class QdrantVectorStore extends VectorDatabaseAdapter {
         }
     }
 
-    async sendToDatabase() {
-        if (this.points.length > 0) {
-            try {
-                await this.client.upsert(this.collection, {
-                    points: this.points,
-                });
-                this.points = [];
-            } catch {}
-        }
-    }
-
-    async searchVector(queryVector: Float32Array, topK = 5): Promise<any[]> {
+    override async searchVector(
+        queryVector: Float32Array,
+        topK = 5,
+    ): Promise<any[]> {
         const result = await this.client.search(this.collection, {
             vector: Array.from(queryVector),
             limit: topK,
@@ -109,7 +111,7 @@ export class QdrantVectorStore extends VectorDatabaseAdapter {
         }));
     }
 
-    async clear() {
+    override async clear() {
         const collectionExists = await this.client.collectionExists(
             this.collection,
         );
@@ -127,9 +129,5 @@ export class QdrantVectorStore extends VectorDatabaseAdapter {
         });
 
         this.logger.verbose(`Collection '${this.collection}' created.`);
-    }
-
-    public asRetriever(): VectorStoreRetriever<any> {
-        return this.vectorStore.asRetriever();
     }
 }

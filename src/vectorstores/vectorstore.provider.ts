@@ -10,15 +10,16 @@ export class VectorStore {
         const provider = Config.get<string>('ai.vector.provider', 'faiss');
 
         switch (provider) {
-            case 'qdrant':
-                const { QdrantVectorStore } = await import(
-                    './qdrant.vectorstore'
+            case 'elastic':
+            case 'elasticsearch':
+                const { ElasticSearchVectorStore } = await import(
+                    './elasticsearch.vectorstore'
                 );
-                const qdrantVectorStore = new QdrantVectorStore();
-                await qdrantVectorStore.initialize(
+                const elasticSearchVectorStore = new ElasticSearchVectorStore();
+                await elasticSearchVectorStore.initialize(
                     embedder.getInterfaceEmbedder(),
                 );
-                return qdrantVectorStore;
+                return elasticSearchVectorStore;
             case 'neo4j':
                 const { Neo4jVectorStore } = await import(
                     './neo4j.vectorstore'
@@ -28,6 +29,23 @@ export class VectorStore {
                     embedder.getInterfaceEmbedder(),
                 );
                 return neo4jVectorStore;
+            case 'pgvector':
+                const { PgVectorStore } = await import(
+                    './pgvector.vectorstore'
+                );
+                const pgVectorStore = new PgVectorStore();
+                await pgVectorStore.initialize(embedder.getInterfaceEmbedder());
+                return pgVectorStore;
+            case 'qdrant':
+                const { QdrantVectorStore } = await import(
+                    './qdrant.vectorstore'
+                );
+                const qdrantVectorStore = new QdrantVectorStore();
+                await qdrantVectorStore.initialize(
+                    embedder.getInterfaceEmbedder(),
+                );
+                return qdrantVectorStore;
+
             default:
                 return null;
         }
