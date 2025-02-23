@@ -1,3 +1,14 @@
+## [0.0.8](https://github.com/cmmvio/cmmv-ai/compare/v0.0.7...v0.0.8) (2025-02-23)
+
+
+### Bug Fixes
+
+* readme ([9b4fdeb](https://github.com/cmmvio/cmmv-ai/commit/9b4fdeb74e2ee8f48dc4ff6d1550b8eb26054d38))
+* readme ([78b282e](https://github.com/cmmvio/cmmv-ai/commit/78b282e69e6dda1d7e5aef4d4e179865b21e6452))
+* vector search ([eb75581](https://github.com/cmmvio/cmmv-ai/commit/eb75581d4d539c3762bfd72206a09498ab50744d))
+
+
+
 ## [0.0.7](https://github.com/cmmvio/cmmv-ai/compare/v0.0.6...v0.0.7) (2025-02-23)
 
 
