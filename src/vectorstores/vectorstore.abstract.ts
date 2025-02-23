@@ -13,7 +13,7 @@ export abstract class VectorDatabaseAdapter {
         return {
             id: entry.id,
             pageContent: entry.content,
-            metadata: entry.metadata,
+            metadata: { ...entry.metadata, id: entry.id },
         };
     }
 

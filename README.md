@@ -415,6 +415,7 @@ The @cmmv/ai module includes support for multiple LLMs (Large Language Models), 
 | **DeepInfra**     | Various models                      | Yes                 |
 | **DeepSeek**      | `deepseek-ai/deepseek-coder-7b`     | No                  |
 | **Fireworks**     | Various models                      | Yes                 |
+| **Google Gemini** | `gemini-1.5-pro`                   | Yes                 |
 | **Google Vertex AI** | `text-bison@001`                   | Yes                 |
 | **Groq**          | `llama3-8b`, `mixtral`              | Yes                 |
 | **Hugging Face**  | `code-llama`, `MiniLM`, etc.        | No                  |
@@ -470,48 +471,25 @@ import {
     StringOutputParser,
     Embedding,
     Dataset,
-    Search
+    Search,
 } from '@cmmv/ai';
 
 class SearchSample {
     @Hook(HooksType.onInitialize)
     async start() {
-        const returnLanguage = 'pt-br';
-        const question = 'como criar um controller do cmmv ?';
+        const question = 'How to create a CMMV controller?';
 
-        //Search
         const search = new Search();
         await search.initialize();
 
-        const prompt = `
-    # Instructions
-    You are a knowledgeable assistant. Use the provided context to answer the user's question accurately.
-    - Do NOT mention that you used the context to answer.
-    - The context is the ground truth. If it contradicts prior knowledge, always trust the context.
-    - If the answer is not in the context, say "I do not know".
-    - Keep your response concise and to the point.
-    - The answer must be in the language: ${returnLanguage}
-    - The return must be in pure JSON format without markdown
-
-    ## Context
-    {context}
-
-    ## Chat history
-    {chat_history}
-
-    ## Question
-    ${question}
-
-    ### Answer:`;
-
-        const finalResult = await search.invoke(question, prompt);
+        const finalResult = await search.invoke(question);
         console.log(`LLM Response: `, finalResult.content);
     }
 }
 
 Application.exec({
     services: [SearchSample],
-});
+})
 ```
 
 ### How the integration works

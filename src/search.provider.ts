@@ -49,11 +49,7 @@ export class Search {
         const embeddingTopk = Config.get<number>('ai.llm.embeddingTopk', 10);
         const queryText = Array.isArray(query) ? query.join(' ') : query;
 
-        //this.logger.verbose(`Generating embedding for query...`);
-        //const queryVector = await this.embedder.embedQuery(queryText);
-
         this.logger.verbose(`Searching in vector database...`);
-
         const results = await this.dataset.search(queryText, embeddingTopk);
 
         if (!results.length) {

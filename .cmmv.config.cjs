@@ -14,8 +14,8 @@ module.exports = {
             model: "sentence-transformers/distilbert-base-nli-mean-tokens",
             indexSize: 768,
             useKeyBERT: false,
-            chunkSize: 1000,
-            chunkOverlap: 0,
+            chunkSize: 2000,
+            chunkOverlap: 100,
             patterns: [
                 //'../cmmv/**/*.ts',
                 //'../cmmv/src/**/*.ts',

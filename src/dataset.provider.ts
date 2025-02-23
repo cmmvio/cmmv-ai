@@ -127,7 +127,7 @@ export class Dataset {
                     return {
                         content: result.doc.pageContent,
                         metadata: result.doc.metadata,
-                        id: result.doc.id,
+                        id: result.doc.id ?? result.doc.metadata.id,
                         score: result.score,
                     } as DatasetEntry;
                 });
