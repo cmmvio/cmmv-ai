@@ -334,7 +334,7 @@ The **Dataset** class manages **vectorized storage** for quick retrieval.
 ### 🔹 **Current Functionality**
 ✅ Saves embeddings in **binary format** (`.bin`).  
 ✅ In-memory **FAISS-based search**.  
-✅ Future support for **Neo4j, Elasticsearch, Pinecone**.  
+✅ Support for **Neo4j, Elasticsearch, PgVector, Qdrant**.  
 
 ### 📌 **Dataset Storage Example**
 ```typescript
@@ -345,14 +345,16 @@ dataset.load(); // Loads the dataset into memory
 
 # 🧠 Vector Database Integration
 
-To efficiently store and search **embeddings**, `@cmmv/ai` supports **Qdrant, Weaviate, Milvus, and Neo4j**.
+To efficiently store and search **embeddings**  `@cmmv/ai`.
 
 ### **🔹 Supported Vector Databases**
-| Database  | Open Source | Node.js Support | Storage Backend | Similarity Search |
-|-----------|------------|----------------|-----------------|-------------------|
-| **Qdrant** | ✅ Yes | ✅ Yes (`@qdrant/js-client-rest`) | Disk/Memory | Cosine, Euclidean, Dot Product |
-| **Milvus** | ✅ Yes | ✅ Yes (`@zilliz/milvus2-sdk-node`) | Disk/Memory | IVF_FLAT, HNSW, PQ |
-| **Neo4j** | ✅ Yes (Community) | ✅ Yes (`neo4j-driver`) | GraphDB | Cypher-based vector search |
+| Database       | Open Source | Node.js Support | Storage Backend | Similarity Search                      |
+|---------------|------------|----------------|-----------------|--------------------------------------|
+| **Qdrant**    | ✅ Yes     | ✅ Yes (`@qdrant/js-client-rest`) | Disk/Memory | Cosine, Euclidean, Dot Product    |
+| **Milvus**    | ✅ Yes     | ✅ Yes (`@zilliz/milvus2-sdk-node`) | Disk/Memory | IVF_FLAT, HNSW, PQ                |
+| **Neo4j**     | ✅ Yes (Community) | ✅ Yes (`neo4j-driver`) | GraphDB | Cypher-based vector search        |
+| **Elasticsearch** | ✅ Yes     | ✅ Yes (`@elastic/elasticsearch`) | Disk | k-NN, Approximate Nearest Neighbors (ANN) |
+| **PGVector**  | ✅ Yes     | ✅ Yes (`pg`) | PostgreSQL | Cosine, Euclidean, Inner Product  |
 
 To run these databases locally, use the following **Docker commands**:
 
@@ -360,22 +362,36 @@ To run these databases locally, use the following **Docker commands**:
 ```bash
 docker run -p 6333:6333 --name qdrant-server qdrant/qdrant
 ```
-- Runs a **Qdrant** server on port `6333`.
-- API available at `http://localhost:6333`.
+* Runs a **Qdrant** server on port `6333`.
+* API available at `http://localhost:6333`.
 
 ### **🔹 Milvus**
 ```bash
 docker run -p 19530:19530 --name milvus-server milvusdb/milvus
 ```
-- Runs **Milvus** on port `19530`.
-- Requires **Python/Node SDK** for interaction.
+* Runs **Milvus** on port `19530`.
+* Requires **Python/Node SDK** for interaction.
 
 ### **🔹 Neo4j**
 ```bash
 docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --name neo4j-server neo4j
 ```
-- Runs **Neo4j** on ports `7474` (HTTP) and `7687` (Bolt).
-- Data is stored persistently in `$HOME/neo4j/data`.
+* Runs **Neo4j** on ports `7474` (HTTP) and `7687` (Bolt).
+* Data is stored persistently in `$HOME/neo4j/data`.
+
+### **🔹 PGVector**
+```bash
+docker run --name pgvector-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=vector_db -p 5432:5432 -d ankane/pgvector
+```
+* Runs **PostgreSQL** with PGVector on port `5432`.
+* Default database is `vector_db` with user `admin` and password `admin`.
+
+### **🔹 Elasticsearch**
+```bash
+docker run -d --name elasticsearch -p 9200:9200 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+```
+* Runs **Elasticsearch** on port `9200`.
+* Single-node mode is enabled for local use.
 
 # 🤖 LLMs (Large Language Models)
 
