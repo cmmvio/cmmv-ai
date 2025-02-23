@@ -20,7 +20,8 @@
 ✅ **Vector Search with FAISS & Vector Databases** – Supports **Qdrant, Milvus, Neo4j**.  
 ✅ **Hugging Face Integration** – Uses `transformers` for embeddings.  
 ✅ **Custom Embedding Models** – Supports `WhereIsAI/UAE-Large-V1`, `MiniLM`, `CodeLlama`, `DeepSeek`, and others.  
-✅ **Future Database Integration** – Plans for **Elasticsearch, Pinecone, etc.**  
+✅ **Database Integration** – Supports `Elasticsearch`, `Pinecone`, `Qdrant`, `PGVector`, and others.   
+✅ **LLM Integration** - Supports `OpenAI`, `Hugging Face`, `Ollama`, `DeepSeek`, `Groq`, `Gemini`, and others. 
 
 ## ⚙ Configuration  
 
