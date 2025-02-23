@@ -12,7 +12,7 @@
   <a href="https://github.com/cmmvio/cmmv/issues">Report Issue</a>
 </p>
 
-`@cmmv/ai` is a module for integrating **LLMs (Large Language Models)** with **tokenization, dataset creation for RAG (Retrieval-Augmented Generation)**, and **FAISS-based vector search**. It allows efficient **code indexing and semantic search** for models like **CodeLlama** and **DeepSeek Code**.  
+The **@cmmv/ai** module provides full support for **Retrieval-Augmented Generation (RAG)** and, in the future, **Retrieval-Augmented Synthesis (RAS)** for **LLMs**. It enables code understanding and generation, supporting:
 
 ## 🚀 Features  
 ✅ **Tokenization & Code Mapping** – Extracts structured tokens from TypeScript/JavaScript files.  
@@ -263,8 +263,8 @@ python3 -m optimum.exporters.onnx --model google/gemma-2b ./models/gemma-2b-onnx
 | Voyage        | voyage-01                               | Yes                 |
 | ZhipuAI       | embedding-2                            | Yes                 |
 
-*[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
-*[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
+* *[https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads](https://huggingface.co/models?pipeline_tag=feature-extraction&library=transformers.js&sort=downloads)*
+* *[https://v03.api.js.langchain.com/index.html](https://v03.api.js.langchain.com/index.html)*
 
 ## 🧠 Tokenization - Extracting Code for RAG 
 
